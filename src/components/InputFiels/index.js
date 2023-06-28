@@ -15,6 +15,7 @@ const InputField = ({
   style,
   selectTextOnFocus,
   image,
+  onFocus
 }) => {
   return (
     <View style={[styles.inputFiedls, style]}>

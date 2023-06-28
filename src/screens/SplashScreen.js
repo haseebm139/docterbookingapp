@@ -14,7 +14,7 @@ function SplashScreen () {
   useEffect(()=>{
     const interval =  setInterval(()=>{
     navigation.replace("Home")
-     },5000)
+     },3000)
      return ()=>{
       clearInterval(interval)
      }
@@ -22,7 +22,6 @@ function SplashScreen () {
   
   return (
     <View style={styles.container}>
-      <MyStatusBar barStyle="light-content"/>
           <TouchableOpacity >
         <View >
           <Logo/>

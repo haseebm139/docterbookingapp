@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Avatar, RadioButton } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useNavigation } from "@react-navigation/native";
@@ -58,10 +58,10 @@ const AccountScreen = ({route}) => {
     setIsLiked(updatedState);
   };
   return (
-    <KeyboardAvoidingView style={{ flex:1 }} behavior='padding'>
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior='padding' style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
       {role === "Customer" && 
-      <>
+      <View  style={styles.container}>
+       <ScrollView>
       <View>
         <View>
             <Text style={styles.h1}>Create Account</Text>
@@ -153,14 +153,14 @@ const AccountScreen = ({route}) => {
         
       </View>
       </View>
+      </ScrollView>
       <CustomButtom
         title="Continue"
         onPress={handlePress}
         />
-        </>
+        </View>
   }
-  {role === "Doctor" && <DoctorAccount/>}
-    </View>
+  {role === "Doctor" && <DoctorAccount/>} 
     </KeyboardAvoidingView>
   );
 };
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent:"space-between",
     paddingTop:responsiveScreenHeight(7),
-    paddingBottom: 40
+    paddingBottom: 30
   },
   h1: {
     fontFamily: "Raleway-SemiBold",

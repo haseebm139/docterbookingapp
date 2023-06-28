@@ -8,6 +8,7 @@ import {
   Picker,
   KeyboardAvoidingView,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import {Avatar, RadioButton} from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -106,9 +107,11 @@ const DoctorAccount = () => {
     setIsLiked(updatedState);
   };
 
+  const [enabledShift, setEnabledShift] = useState(false)
+
   return (
-    <KeyboardAvoidingView  behavior='position' style={{ flex:1 }}>
-      <View>
+    <View  style={styles.container} >
+      <ScrollView bounces={false} style={{ flex:1 }}>
       <MyStatusBar backgroundColor="transparent" barStyle= "dark-content" />
       <View style={{height: responsiveScreenHeight(70)}}>
         <View style={{flexDirection: 'row'}}>
@@ -140,7 +143,7 @@ const DoctorAccount = () => {
                 />
               </View>
             </TouchableOpacity>
-
+     <ScrollView>
             <View>
               <Text style={styles.inputLabel}>First Name</Text>
               <InputField
@@ -148,6 +151,7 @@ const DoctorAccount = () => {
                 value={firstName}
                 handleChange={text => setFirstName(text)}
                 keyboardType="default"
+                onChangeFocus={()=> setEnabledShift(true)}
               />
             </View>
             <View>
@@ -157,6 +161,7 @@ const DoctorAccount = () => {
                 value={lastName}
                 handleChange={text => setLastName(text)}
                 keyboardType="default"
+                
               />
             </View>
             <View>
@@ -197,6 +202,7 @@ const DoctorAccount = () => {
                 ))}
               </View>
             </View>
+            </ScrollView>
           </View>
         )}
         {step === 2 && (
@@ -278,13 +284,13 @@ const DoctorAccount = () => {
           </View>
         )}
       </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>
           {step < totalSteps ? 'Next' : 'Submit'}
         </Text>
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -407,7 +413,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
     fontFamily: 'PlusJakartaSans-ExtraBold',
-    marginTop: responsiveScreenHeight(10),
   },
   colorWhite: {
     fontFamily: 'PlusJakartaSans-ExtraBold',
