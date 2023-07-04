@@ -22,7 +22,6 @@ function SplashScreen () {
   
   return (
     <View style={styles.container}>
-      <MyStatusBar barStyle="light-content"/>
           <TouchableOpacity >
         <View >
           <Logo/>
