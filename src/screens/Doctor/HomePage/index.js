@@ -10,11 +10,14 @@ import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-resp
 import Visits from '../../../components/doctor/Visits'
 import Swiper from 'react-native-swiper'
 import MyStatusBar from '../../../components/Statusbar'
+import { useSelector } from 'react-redux'
 
 const DoctorHomePage = () => {
     const CustomDot = ({ active }) => (
         <View style={[styles.dot, active && styles.activeDot]} />
       );
+      const doctordetails = useSelector(state => state.doctorAccount)
+      console.log(doctordetails)
   return (
     <View style={styles.container}>
       <MyStatusBar backgroundColor="transparent" barStyle="dark-content"/>

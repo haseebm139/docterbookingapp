@@ -8,12 +8,19 @@ import CustomButtom from '../components/Button'
 import InputField from '../components/InputFiels'
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions'
 import MyStatusBar from '../components/Statusbar'
+import axios from 'axios'
+import { setPhoneNumber as phone } from './Redux/Reducer/phoneSlice'
+import { useDispatch } from 'react-redux'
+import { ActivityIndicator } from 'react-native-paper'
+import { Spinner } from '../components/Spinner'
 const MobileAuthentication = ({route}) => {
   const navigation = useNavigation();
   let textInput = useRef(null)
   const [phoneNumber, setPhoneNumber] = useState();
   const [focusInput, SetFocusInput] = useState(true)
+  const [loading , setLoading] = useState(false)
   const {role} = route.params
+  const dispatch = useDispatch()
   const onChangeFocus = ()=>{
     SetFocusInput(true)
   }
@@ -24,14 +31,27 @@ const MobileAuthentication = ({route}) => {
   const handlePress= ()=>{
     navigation.goBack();
   }
- const onPress = ()=>{
-  navigation.navigate("OTPVerify", {role})
+ const onPress = async ()=>{
+  setLoading(true)
+  const data = await axios.post("https://customdemowebsites.com/dbapi/auth/add",{
+    phone_no: phoneNumber
+  }).then((response)=>{
+    
+    dispatch(phone(phoneNumber))
+    setLoading(false)
+    navigation.navigate("OTPVerify", {role})
+  }).catch(err => console.log(err))
+
+  // if(!loading) return <Text>Loading</Text>
  }
   return (
+    <>
+    {loading? <Spinner/>
+    :
     <KeyboardAvoidingView style={{ flex:1 }} behavior='padding'>
       
     <View style={styles.container}>
-    
+    {/* {!loading && <ActivityIndicator/>} */}
         <View>
         <MyStatusBar barStyle="dark-content" backgroundColor="#fff"/>
           <Header
@@ -53,6 +73,8 @@ const MobileAuthentication = ({route}) => {
         />
           </View>
           </KeyboardAvoidingView>
+}
+          </>
  )
 }
 

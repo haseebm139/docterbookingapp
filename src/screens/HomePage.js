@@ -21,12 +21,15 @@ import {Avatar} from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import DoctorReviews from '../components/doctor/HomepageReviews';
 import {Dropdown} from 'react-native-element-dropdown';
+import { useSelector } from 'react-redux';
 
 const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const handleIndexChanged = index => {
     setCurrentIndex(index);
   };
+  const user = useSelector(state => state.customerAccount)
+  console.log(user)
   const navigation = useNavigation();
   const data = [
     {
@@ -85,7 +88,7 @@ const HomePage = () => {
       }}>
       <View style={styles.container}>
         <View style={{marginVertical: 20}}>
-          <Text style={styles.title}>Hello Abdullah</Text>
+          <Text style={styles.title}>Hello {user.firstName}</Text>
           <View style={{ flexDirection: "row", justifyContent:"space-between", alignItems:"center" }}>
             <Text style={styles.heading}>Find your specialist</Text>
             <View >

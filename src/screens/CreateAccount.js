@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Avatar, RadioButton } from 'react-native-paper';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
@@ -9,6 +9,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import DoctorLogin from './Auth/DoctorLogin/MobileLogin';
 import DoctorAccount from './Auth/DoctorLogin';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+  setFirstName as firstname ,
+  setLastName as lastname,
+  setEmail as Email,
+  setgender as Gender
+} from './Redux/Reducer/CreateAccount/CustomerAccount';
+import axios from 'axios';
+import { Spinner } from '../components/Spinner';
 
 const AccountScreen = ({route}) => {
   const [avatar, setAvatar] = useState(null);
@@ -17,7 +26,11 @@ const AccountScreen = ({route}) => {
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
   const [selectedValue, setSelectedValue] = useState('option1');
+  // const [loading , setLoading] = useState(false)
   const {role} = route.params;
+  const phone = useSelector((State) => State.phone)
+  console.log(phone)
+  const dispatch = useDispatch()
   const handleRadioChange = (value) => {
     setSelectedValue(value);
   };
@@ -36,7 +49,23 @@ const AccountScreen = ({route}) => {
     { id: 2, value: false, name: "Female", selected: false },
     { id: 3, value: false, name: "Other", selected: false }
   ]);
-
+useEffect(()=>{
+  async function fetchData() {
+  const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/detail",{
+      phone_no: phone,
+    }).then((response)=>{
+        console.log(response.data)
+      dispatch(firstname(response.data.f_name))
+      dispatch(lastname(response.data.l_name))
+      dispatch(Email(response.data.email))
+      dispatch(Gender(response.data.gender))
+      navigation.navigate("HomePage")
+      
+      
+    }).catch(err => console.log(err))
+  }
+  fetchData()
+}, [])
 
   const handleCameraUpload = () => {
     launchCamera({ mediaType: 'photo' }, response => {
@@ -45,19 +74,46 @@ const AccountScreen = ({route}) => {
       }
     });
   };
-
-  const handlePress = ()=>{
-    navigation.navigate("HomePage")
-  }
   const onRadioBtnClick = (item) => {
     let updatedState = isLiked.map((isLikedItem) =>
       isLikedItem.id === item.id
         ? { ...isLikedItem, selected: true }
         : { ...isLikedItem, selected: false }
     );
+    let data = updatedState.map((res)=>{
+      if(res.selected == true){
+        setGender(res.name)
+        console.log(res.id)
+      }
+    })
+    console.log(updatedState)
     setIsLiked(updatedState);
   };
+  console.log(gender)
+
+  const handlePress = async()=>{
+    // console.log(firstName, lastName, email, isLiked)
+    const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/add",{
+      f_name: firstName,
+      l_name: lastName,
+      phone_no: phone,
+      email: email,
+      address:"",
+      gender: gender
+    }).then((response)=>{
+      console.log(response.data)
+      dispatch(firstname(firstName))
+      dispatch(lastname(lastName))
+      dispatch(Email(email))
+      dispatch(Gender(gender))
+      navigation.navigate("HomePage")
+    }).catch(err => console.log(err))
+    
+  }
+ 
   return (
+    <>
+   
     <KeyboardAvoidingView behavior='padding' style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
       {role === "Customer" && 
       <View  style={styles.container}>
@@ -66,7 +122,7 @@ const AccountScreen = ({route}) => {
         <View>
             <Text style={styles.h1}>Create Account</Text>
             <Text style={{fontFamily: "Raleway-Medium",color: "#172331", fontSize: 16, marginBottom: 10}}>phone</Text>
-            <Text style={{ fontFamily: "Raleway-ExtraBold",color: "#172331",marginBottom: 10 }}>+91 9540826565</Text>
+            <Text style={{ fontFamily: "Raleway-ExtraBold",color: "#172331",marginBottom: 10 }}>{phone}</Text>
         </View>
       <TouchableOpacity style={styles.avatarContainer} onPress={handleImageUpload}>
        
@@ -162,6 +218,7 @@ const AccountScreen = ({route}) => {
   }
   {role === "Doctor" && <DoctorAccount/>} 
     </KeyboardAvoidingView>
+    </>
   );
 };
 

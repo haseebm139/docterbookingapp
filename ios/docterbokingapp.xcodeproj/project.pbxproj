@@ -11,7 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1A06972DAD195EC78776F426 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B0955D1235349F5F6EE6BE /* libPods-docterbokingapp-docterbokingappTests.a */; };
+		7E11BF2B5B4E41F9D09FD99C /* libPods-docterbokingapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 789A76AFA61A1845ED4F6C51 /* libPods-docterbokingapp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A3FACC302A40441C0036D1B8 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC0D2A40441C0036D1B8 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
 		A3FACC312A40441C0036D1B8 /* Raleway-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC0E2A40441C0036D1B8 /* Raleway-ThinItalic.ttf */; };
@@ -48,7 +48,7 @@
 		A3FACC502A40441C0036D1B8 /* Raleway-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2D2A40441C0036D1B8 /* Raleway-Italic.ttf */; };
 		A3FACC512A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2E2A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf */; };
 		A3FACC522A40441C0036D1B8 /* Raleway-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2F2A40441C0036D1B8 /* Raleway-MediumItalic.ttf */; };
-		E31A888E827E0482BC7E152D /* libPods-docterbokingapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B5418F20CAE136D32AE09F3 /* libPods-docterbokingapp.a */; };
+		B58BC334F03FEF4BBF72F5E4 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E70B86A1DD9BD802582CB5AC /* libPods-docterbokingapp-docterbokingappTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,18 +65,16 @@
 		00E356EE1AD99517003FC87E /* docterbokingappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = docterbokingappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* docterbokingappTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = docterbokingappTests.m; sourceTree = "<group>"; };
-		0B5418F20CAE136D32AE09F3 /* libPods-docterbokingapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		129D7524ABCDA02D74B2BE3F /* Pods-docterbokingapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp.debug.xcconfig"; path = "Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* docterbokingapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = docterbokingapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = docterbokingapp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = docterbokingapp/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = docterbokingapp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = docterbokingapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = docterbokingapp/main.m; sourceTree = "<group>"; };
-		53ADBE5C2846032B8B12A8E1 /* Pods-docterbokingapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp.release.xcconfig"; sourceTree = "<group>"; };
-		7C4DB0BC16718020EE3F5203 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; sourceTree = "<group>"; };
-		7C8D47C3A49117C9A9FBED61 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3B77C9ED0A4EC3FF2183DC6C /* Pods-docterbokingapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp.release.xcconfig"; sourceTree = "<group>"; };
+		789A76AFA61A1845ED4F6C51 /* libPods-docterbokingapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = docterbokingapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		84B0955D1235349F5F6EE6BE /* libPods-docterbokingapp-docterbokingappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp-docterbokingappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3A3542C2A49AB990025B2F6 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		A3A3542D2A49AB990025B2F6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		A3A3542E2A49AB990025B2F6 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -126,7 +124,9 @@
 		A3FACC2D2A40441C0036D1B8 /* Raleway-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Italic.ttf"; path = "../assets/fonts/Raleway-Italic.ttf"; sourceTree = "<group>"; };
 		A3FACC2E2A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-ExtraLightItalic.ttf"; path = "../assets/fonts/Raleway-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		A3FACC2F2A40441C0036D1B8 /* Raleway-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-MediumItalic.ttf"; path = "../assets/fonts/Raleway-MediumItalic.ttf"; sourceTree = "<group>"; };
-		A57CADBB9CD4BAE5118AE118 /* Pods-docterbokingapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp.debug.xcconfig"; path = "Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp.debug.xcconfig"; sourceTree = "<group>"; };
+		BC0B0DA65F4B5554337B5152 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C84FD73E3446FF5F43041833 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; sourceTree = "<group>"; };
+		E70B86A1DD9BD802582CB5AC /* libPods-docterbokingapp-docterbokingappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp-docterbokingappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -135,7 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A06972DAD195EC78776F426 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */,
+				B58BC334F03FEF4BBF72F5E4 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E31A888E827E0482BC7E152D /* libPods-docterbokingapp.a in Frameworks */,
+				7E11BF2B5B4E41F9D09FD99C /* libPods-docterbokingapp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,8 +185,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				0B5418F20CAE136D32AE09F3 /* libPods-docterbokingapp.a */,
-				84B0955D1235349F5F6EE6BE /* libPods-docterbokingapp-docterbokingappTests.a */,
+				789A76AFA61A1845ED4F6C51 /* libPods-docterbokingapp.a */,
+				E70B86A1DD9BD802582CB5AC /* libPods-docterbokingapp-docterbokingappTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -281,10 +281,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A57CADBB9CD4BAE5118AE118 /* Pods-docterbokingapp.debug.xcconfig */,
-				53ADBE5C2846032B8B12A8E1 /* Pods-docterbokingapp.release.xcconfig */,
-				7C8D47C3A49117C9A9FBED61 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */,
-				7C4DB0BC16718020EE3F5203 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */,
+				129D7524ABCDA02D74B2BE3F /* Pods-docterbokingapp.debug.xcconfig */,
+				3B77C9ED0A4EC3FF2183DC6C /* Pods-docterbokingapp.release.xcconfig */,
+				BC0B0DA65F4B5554337B5152 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */,
+				C84FD73E3446FF5F43041833 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -296,12 +296,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "docterbokingappTests" */;
 			buildPhases = (
-				5355FFFDA70C7B4895A2F089 /* [CP] Check Pods Manifest.lock */,
+				3BB44ADB05661CC3DAEADEC7 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				6CF8E065FF2320E2BBFBAFF1 /* [CP] Embed Pods Frameworks */,
-				DABBD979AC96C52D27379597 /* [CP] Copy Pods Resources */,
+				239CA99005E2CA1F60A174B2 /* [CP] Embed Pods Frameworks */,
+				EB5E294AA749011BDDF79F26 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -317,14 +317,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "docterbokingapp" */;
 			buildPhases = (
-				C1B037BEEEB25021941EBEC9 /* [CP] Check Pods Manifest.lock */,
+				B9C42F8990CDB2AD919DF168 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				1697F1773CB809F4FD787E4D /* [CP] Embed Pods Frameworks */,
-				B3F4FD901C42D5D88C33B94B /* [CP] Copy Pods Resources */,
+				665F4BCB508E20E19E0CC9C4 /* [CP] Embed Pods Frameworks */,
+				B442CEB22888E2AF0F51CFB7 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -443,24 +443,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		1697F1773CB809F4FD787E4D /* [CP] Embed Pods Frameworks */ = {
+		239CA99005E2CA1F60A174B2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		5355FFFDA70C7B4895A2F089 /* [CP] Check Pods Manifest.lock */ = {
+		3BB44ADB05661CC3DAEADEC7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -482,24 +482,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6CF8E065FF2320E2BBFBAFF1 /* [CP] Embed Pods Frameworks */ = {
+		665F4BCB508E20E19E0CC9C4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B3F4FD901C42D5D88C33B94B /* [CP] Copy Pods Resources */ = {
+		B442CEB22888E2AF0F51CFB7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -516,7 +516,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C1B037BEEEB25021941EBEC9 /* [CP] Check Pods Manifest.lock */ = {
+		B9C42F8990CDB2AD919DF168 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -538,7 +538,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DABBD979AC96C52D27379597 /* [CP] Copy Pods Resources */ = {
+		EB5E294AA749011BDDF79F26 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -607,7 +607,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C8D47C3A49117C9A9FBED61 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */;
+			baseConfigurationReference = BC0B0DA65F4B5554337B5152 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -635,7 +635,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C4DB0BC16718020EE3F5203 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */;
+			baseConfigurationReference = C84FD73E3446FF5F43041833 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -660,12 +660,12 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A57CADBB9CD4BAE5118AE118 /* Pods-docterbokingapp.debug.xcconfig */;
+			baseConfigurationReference = 129D7524ABCDA02D74B2BE3F /* Pods-docterbokingapp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G9WYA22DK9;
+				DEVELOPMENT_TEAM = 67W7GF35S3;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = docterbokingapp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
@@ -689,12 +689,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53ADBE5C2846032B8B12A8E1 /* Pods-docterbokingapp.release.xcconfig */;
+			baseConfigurationReference = 3B77C9ED0A4EC3FF2183DC6C /* Pods-docterbokingapp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G9WYA22DK9;
+				DEVELOPMENT_TEAM = 67W7GF35S3;
 				INFOPLIST_FILE = docterbokingapp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
