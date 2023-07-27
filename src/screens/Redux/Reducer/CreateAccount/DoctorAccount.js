@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const createDoctorAccountSlice = createSlice({
   name: 'createAccount',
   initialState: {
+    id:"",
     firstName: '',
     lastName: '',
     email: '',
@@ -14,6 +15,9 @@ const createDoctorAccountSlice = createSlice({
     gender: '',
   },
   reducers: {
+    setId:(state, action)=>{
+      state.id = action.payload;
+    },
     setFirstName: (state, action) => {
       state.firstName = action.payload;
     },
@@ -45,6 +49,7 @@ const createDoctorAccountSlice = createSlice({
 });
 
 export const { 
+  setId,
     setFirstName,
     setAddress,
     setExperience,
