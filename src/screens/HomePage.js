@@ -34,7 +34,7 @@ const HomePage = () => {
   const data = [
     {
       id: '1',
-      name: 'Physiotherapy',
+      name: 'Urologist',
       image: require('../assets/assets/cat1.png'),
     },
     {id: '2', name: 'Dietician', image: require('../assets/assets/cat2.png')},
@@ -79,6 +79,11 @@ const HomePage = () => {
     }
     return null;
   };
+
+  const handlePress = (item)=>{
+   console.log(item)
+   navigation.navigate("Specialist", {"search": item})
+  }
   return (
     <ScrollView
       style={{
@@ -124,7 +129,7 @@ const HomePage = () => {
             <View key={item.id} style={styles.col3}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Specialist');
+                  handlePress(item.name);
                 }}>
                 <View style={styles.card}>
                   <Image

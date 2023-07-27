@@ -29,6 +29,7 @@ import axios from 'axios';
 import {Dropdown} from 'react-native-element-dropdown';
 import { useDispatch, useSelector } from 'react-redux';
 import {  
+  setId as Id,
   setFirstName as fname,
   setAddress as add,
   setExperience as exp,
@@ -71,6 +72,8 @@ const DoctorAccount = () => {
   const navigation = useNavigation();
   const phone = useSelector((State) => State.phone)
   const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state)=> state.doctorAccount)
   console.log(phone)
 
   const handleImageUpload = () => {
@@ -80,28 +83,60 @@ const DoctorAccount = () => {
       }
     });
   };
-  useEffect(()=>{
+  // useEffect(()=>{
+  //   async function fetchData() {
+      
+  //   const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail",{
+  //       phone_no: phone,
+  //     }).then((response)=>{
+  //         console.log(response.data)
+  //         dispatch(Id(response.data.id))
+  //         dispatch(fname(response.data.f_name))
+  //         dispatch(lname(response.data.l_name))
+  //         dispatch(Email(response.data.email))
+  //         dispatch(prof(response.data.profession))
+  //         dispatch(gen(response.data.gender))
+  //         dispatch(hosp(response.data.hospital))
+  //         dispatch(exp(response.data.experience))
+  //         dispatch(fees(response.data.fee))
+  //         dispatch(add(response.data.address))
+  //       navigation.navigate("DoctorHome")
+        
+        
+  //     }).catch(err => console.log(err))
+  //   }
+  //   fetchData()
+  // }, [])
+  useEffect(() => {
     async function fetchData() {
-    const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail",{
-        phone_no: phone,
-      }).then((response)=>{
-          console.log(response.data)
-          dispatch(fname(response.data.f_name))
-          dispatch(lname(response.data.l_name))
-          dispatch(Email(response.data.email))
-          dispatch(prof(response.data.profession))
-          dispatch(gen(response.data.gender))
-          dispatch(hosp(response.data.hospital))
-          dispatch(exp(response.data.experience))
-          dispatch(fees(response.data.fee))
-          dispatch(add(response.data.address))
-        navigation.navigate("DoctorHome")
-        
-        
-      }).catch(err => console.log(err))
+      if (!user.id) {
+        try {
+          const response = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail", {
+            phone_no: phone,
+          });
+
+          if (response.data) {
+            console.log(response.data);
+            dispatch(Id(response.data.id));
+            dispatch(fname(response.data.f_name));
+            dispatch(lname(response.data.l_name));
+            dispatch(Email(response.data.email));
+            dispatch(prof(response.data.profession));
+            dispatch(gen(response.data.gender));
+            dispatch(hosp(response.data.hospital));
+            dispatch(exp(response.data.experience));
+            dispatch(fees(response.data.fee));
+            dispatch(add(response.data.address));
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      setLoading(false);
     }
-    fetchData()
-  }, [])
+
+    fetchData();
+  }, []);
 
   const handleCameraUpload = () => {
     launchCamera({mediaType: 'photo'}, response => {
@@ -188,6 +223,12 @@ const DoctorAccount = () => {
   };
 
   return (
+    <>
+    {user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
+        <>{navigation.reset({ index: 0, routes: [{ name: 'DoctorHome' }] })}</>
+      ) : loading ? ( // Render a loading spinner or some placeholder content until loading is complete
+        <Spinner />
+      ) : (
     <View  style={styles.container} >
       <ScrollView bounces={false} style={{ flex:1 }}>
       <MyStatusBar backgroundColor="transparent" barStyle= "dark-content" />
@@ -388,6 +429,8 @@ const DoctorAccount = () => {
         </Text>
       </TouchableOpacity>
     </View>
+      )}
+      </>
   );
 };
 

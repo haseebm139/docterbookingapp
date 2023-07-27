@@ -19,6 +19,7 @@ const Availibility = () => {
       title="Schedule"
      image={<AddIcon/>}
      availabibility="Add Availabibility"
+     onPress={()=> navigation.navigate("AddAvailability")}
      style={{ fontSize: 23 }}
       />
 

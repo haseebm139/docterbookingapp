@@ -48,6 +48,7 @@ import DoctorLogin from './src/screens/Auth/DoctorLogin/MobileLogin';
 import DoctorOtpVerification from './src/screens/Auth/DoctorLogin/DoctorOtPVerification';
 import DoctorTabNavigator from './src/components/Doctortab/navigation';
 import Detail from './src/screens/Details';
+import AddAvailability from './src/screens/Doctor/Availibility/AddAvailibility';
 
 function App() {
   const Stack = createNativeStackNavigator();
@@ -66,6 +67,7 @@ function App() {
           <Stack.Screen name="DoctorHomePage" component={DoctorHomePage} />
           <Stack.Screen name="Availibility" component={Availibility} />
           <Stack.Screen name="MyAvailability" component={MyAvailability} />
+          <Stack.Screen name="AddAvailability" component={AddAvailability} />
           <Stack.Screen name="TotalVisits" component={TotalVisits} />
           <Stack.Screen name="VisitDetails" component={VisitDetails} />
           <Stack.Screen name="MyReviews" component={MyReviews} />

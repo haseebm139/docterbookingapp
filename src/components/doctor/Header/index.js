@@ -7,7 +7,7 @@ const Head = ({title,image, availabibility, style, onPress}) => {
     <View style={styles.head}>
       <Text style={[styles.h1, style]}>{title}</Text>
       {image && <TouchableOpacity onPress={onPress} style={{flexDirection:"row", gap: 5, alignItems:"center"}}>{image}
-      {availabibility && <Text style={{color:"#4464D9", fontFamily:"Raleway-SemiBold", fontSize: 14}}>{availabibility}</Text>}
+      {availabibility && <Text  onPress={onPress} style={{color:"#4464D9", fontFamily:"Raleway-SemiBold", fontSize: 14}}>{availabibility}</Text>}
       </TouchableOpacity>}
     </View>
   )
