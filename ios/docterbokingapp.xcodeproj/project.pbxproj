@@ -48,8 +48,8 @@
 		A3FACC502A40441C0036D1B8 /* Raleway-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2D2A40441C0036D1B8 /* Raleway-Italic.ttf */; };
 		A3FACC512A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2E2A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf */; };
 		A3FACC522A40441C0036D1B8 /* Raleway-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3FACC2F2A40441C0036D1B8 /* Raleway-MediumItalic.ttf */; };
-		B75622B65ED2E3C4FFCD7710 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C593F99710FC62AD4753BFE4 /* libPods-docterbokingapp-docterbokingappTests.a */; };
-		CAC68D6DAEEEDA6515A92CAA /* libPods-docterbokingapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A661618EC229FBFA88E92EF /* libPods-docterbokingapp.a */; };
+		BE19286D08BA00CA07575EAF /* Pods_docterbokingapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F62AD63AC36FF85678C067E /* Pods_docterbokingapp.framework */; };
+		FBB55C5A6AEBCC1543AD4F45 /* Pods_docterbokingapp_docterbokingappTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D5B20D5D924C2820C84BA0A /* Pods_docterbokingapp_docterbokingappTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,10 +73,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = docterbokingapp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = docterbokingapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = docterbokingapp/main.m; sourceTree = "<group>"; };
-		2A661618EC229FBFA88E92EF /* libPods-docterbokingapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B77C9ED0A4EC3FF2183DC6C /* Pods-docterbokingapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp/Pods-docterbokingapp.release.xcconfig"; sourceTree = "<group>"; };
+		5F62AD63AC36FF85678C067E /* Pods_docterbokingapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_docterbokingapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = docterbokingapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8BC520D52A725A33000DF683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		9D5B20D5D924C2820C84BA0A /* Pods_docterbokingapp_docterbokingappTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_docterbokingapp_docterbokingappTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3A3542C2A49AB990025B2F6 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		A3A3542D2A49AB990025B2F6 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		A3A3542E2A49AB990025B2F6 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -127,7 +128,6 @@
 		A3FACC2E2A40441C0036D1B8 /* Raleway-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-ExtraLightItalic.ttf"; path = "../assets/fonts/Raleway-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		A3FACC2F2A40441C0036D1B8 /* Raleway-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-MediumItalic.ttf"; path = "../assets/fonts/Raleway-MediumItalic.ttf"; sourceTree = "<group>"; };
 		BC0B0DA65F4B5554337B5152 /* Pods-docterbokingapp-docterbokingappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.debug.xcconfig"; sourceTree = "<group>"; };
-		C593F99710FC62AD4753BFE4 /* libPods-docterbokingapp-docterbokingappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-docterbokingapp-docterbokingappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C84FD73E3446FF5F43041833 /* Pods-docterbokingapp-docterbokingappTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; path = "Target Support Files/Pods-docterbokingapp-docterbokingappTests/Pods-docterbokingapp-docterbokingappTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -137,7 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B75622B65ED2E3C4FFCD7710 /* libPods-docterbokingapp-docterbokingappTests.a in Frameworks */,
+				FBB55C5A6AEBCC1543AD4F45 /* Pods_docterbokingapp_docterbokingappTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,7 +145,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CAC68D6DAEEEDA6515A92CAA /* libPods-docterbokingapp.a in Frameworks */,
+				BE19286D08BA00CA07575EAF /* Pods_docterbokingapp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,8 +188,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2A661618EC229FBFA88E92EF /* libPods-docterbokingapp.a */,
-				C593F99710FC62AD4753BFE4 /* libPods-docterbokingapp-docterbokingappTests.a */,
+				5F62AD63AC36FF85678C067E /* Pods_docterbokingapp.framework */,
+				9D5B20D5D924C2820C84BA0A /* Pods_docterbokingapp_docterbokingappTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

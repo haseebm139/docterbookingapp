@@ -22,7 +22,6 @@ const Tab = createBottomTabNavigator();
 
 
 const  CustomTabNavigator = ()=> {
-
   const navigation = useNavigation();
   return (
     <Tab.Navigator 
@@ -123,3 +122,5 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
   });
+
+  

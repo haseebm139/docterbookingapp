@@ -73,13 +73,9 @@ const Schedule = () => {
     }
     setStatus(status);
   };
-
   console.log(dataList)
-
- 
-
-  const renderItem = ({item, index}) => {
-    const leftLine = [ item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
+  function renderItem({ item, index }) {
+    const leftLine = [item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
     return (
       <View key={index} style={styles.appointContainer}>
         <View style={leftLine} />
@@ -111,10 +107,10 @@ const Schedule = () => {
             </View>
           </View>
           {!item.statusCode && <PhoneIcon />}
-          
+
         </View>
         <Divider />
-        <View 
+        <View
           style={{
             flexDirection: 'row',
             gap: 20,
@@ -123,16 +119,15 @@ const Schedule = () => {
           }}>
           <Avatar.Image
             size={48}
-            source={require('../../assets/assets/doctorimg.png')}
-          />
-          <View style={{gap: 5}}>
-            <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
-              <Text style={{color: '#172331', fontFamily: 'Raleway-Bold'}}>
+            source={require('../../assets/assets/doctorimg.png')} />
+          <View style={{ gap: 5 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+              <Text style={{ color: '#172331', fontFamily: 'Raleway-Bold' }}>
                 {item.name}
               </Text>
               <Image source={require('../../assets/assets/verified.png')} />
             </View>
-            <View style={{flexDirection: 'row', gap: 5, alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
               <Text
                 style={{
                   color: '#172331',
@@ -153,23 +148,22 @@ const Schedule = () => {
             </View>
           </View>
         </View>
-        {item.statusCode &&  <View style={{flexDirection:"row", justifyContent:"space-between"}}>
-        <Tag label="Completed" color="success" />
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("Review")
-        }}>
-       <View style={styles.button}>
-            <PencilIcon/>
-            <Text style={{fontFamily:"Raleway-Medium", fontSize: 12, color:"#fff"}}>Write a Review</Text>
-        </View> 
-        </TouchableOpacity>
-        
-        </View>
-        }
-        
+        {item.statusCode && <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Tag label="Completed" color="success" />
+          <TouchableOpacity onPress={() => {
+            navigation.navigate("Review");
+          } }>
+            <View style={styles.button}>
+              <PencilIcon />
+              <Text style={{ fontFamily: "Raleway-Medium", fontSize: 12, color: "#fff" }}>Write a Review</Text>
+            </View>
+          </TouchableOpacity>
+
+        </View>}
+
       </View>
     );
-  };
+  }
   return (
     <ScrollView style={styles.container}>
       <MyStatusBar backgroundColor="transparent"/>
@@ -557,4 +551,4 @@ const Tag = ({ label, color }) => {
         <Text style={labelStyles}>{label}</Text>
       </View>
     );
-  };
+};
