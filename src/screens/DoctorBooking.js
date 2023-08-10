@@ -30,7 +30,6 @@ const DoctorBooking = () => {
     setSelectedTime(time);
   };
     const [selectedDayIndex, setSelectedDayIndex] = useState(null);
-
     const handleDayPress = (index) => {
       setSelectedDayIndex(index);
     };
