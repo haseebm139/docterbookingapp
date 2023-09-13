@@ -2,24 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Foundation.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>PlusJakartaSans-SemiBold.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>PlusJakartaSans-Medium.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>Raleway-ExtraBold.ttf</string>
-		<string>PlusJakartaSans-Bold.ttf</string>
-		<string>Raleway-Medium.ttf</string>
-		<string>Raleway-SemiBold.ttf</string>
-		<string>Raleway-Regular.ttf</string>
-		<string>Raleway-Bold.ttf</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -38,6 +20,17 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.293113277935-6g4sr8im7ohrvsddq1jjao7ghgb3gpfu</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -55,6 +48,24 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Foundation.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>PlusJakartaSans-SemiBold.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>PlusJakartaSans-Medium.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>Raleway-ExtraBold.ttf</string>
+		<string>PlusJakartaSans-Bold.ttf</string>
+		<string>Raleway-Medium.ttf</string>
+		<string>Raleway-SemiBold.ttf</string>
+		<string>Raleway-Regular.ttf</string>
+		<string>Raleway-Bold.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   btnTransparent: {
     backgroundColor: 'transparent',
     alignItems: 'center',
-    marginTop: responsiveScreenHeight(1.4),
   },
   btnPrimaryColor: {
     color: '#4464D9',

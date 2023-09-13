@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Header from '../components/Header/index';
@@ -18,6 +19,7 @@ import {
 } from 'react-native-responsive-dimensions';
 
 const OTPScreen = ({route}) => {
+  console.log(route)
   const navigation = useNavigation();
 
   const [otp, setOtp] = useState('');
@@ -26,21 +28,7 @@ const OTPScreen = ({route}) => {
   const inputRefs = useRef([]);
 
   useEffect(() => {
-    // let intervalId;
-
-    // if (isTimerRunning) {
-    //   intervalId = setInterval(() => {
-    //     setTimer(prevTimer => prevTimer - 1);
-    //   }, 1000);
-    // }
-
-    // if (timer === 0) {
-    //   setIsTimerRunning(false);
-    // }
-
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
+    
     const interval = setInterval(() => {
           if (timer > 0) {
             setTimer((prevTimer) => prevTimer - 1);
@@ -75,69 +63,23 @@ const OTPScreen = ({route}) => {
     setTimer(60);
     setIsTimerRunning(true);
   };
-  const {role} = route.params;
+  const {role} = route.params
+  const {confirm} = route.params;
+console.log(confirm)
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     if (timer > 0) {
-  //       setTimer((prevTimer) => prevTimer - 1);
-  //     } else {
-  //       setIsTimerRunning(false);
-  //     }
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, [timer]);
-
-  // const handleOTPPaste = (text) => {
-  //   const otpArray = text.slice(0, 6).split("");
-  //   const newOTP = [...otp];
-
-  //   otpArray.forEach((value, index) => {
-  //     if (inputRefs.current[index]) {
-  //       newOTP[index] = value;
-  //       inputRefs.current[index].setNativeProps({ text: value });
-  //       if (index === 5) {
-  //         setOTP(newOTP);
-  //         handleVerifyOTP();
-  //       }
-  //     }
-  //   });
-  // };
-
-  // const handleVerifyOTP = () => {
-  //   const enteredOTP = otp.join("");
-  //   // TODO: Implement OTP verification logic
-  //   console.log("Entered OTP:", enteredOTP);
-  // };
-
-  // const handleResendOTP = () => {
-  //   setOTP(["", "", "", "", "", ""]);
-  //   setTimer(30);
-  //   setIsTimerRunning(true);
-  //   inputRefs.current[0].focus();
-  // };
-
-  // const handleOTPEdit = (value, index) => {
-  //   const newOTP = [...otp];
-  //   newOTP[index] = value;
-  //   setOTP(newOTP);
-
-  //   if (value === "" && index > 0 && inputRefs.current[index - 1]) {
-  //     inputRefs.current[index - 1].focus();
-  //   } else if (index < otp.length - 1 && inputRefs.current[index + 1]) {
-  //     inputRefs.current[index + 1].focus();
-  //   }
-
-  //   if (index === otp.length - 1 && value !== "") {
-  //     handleVerifyOTP();
-  //   }
-  // };
   const handlePress = () => {
     navigation.goBack();
   };
-  const onPress = () => {
-    navigation.navigate('CreateAccount', {role});
+  const onPress = async() => {
+    console.log("WORKING")
+    try{
+      let data = await confirm.confirm(otp);
+      console.log("sign IN")
+       navigation.navigate('CreateAccount', {role});
+    }catch(err){
+      Alert("invalid OTP")
+    }
+   
   };
   return (
     <KeyboardAvoidingView style={{ flex:1 }} behavior='padding'>
@@ -172,25 +114,7 @@ const OTPScreen = ({route}) => {
           </View>
         ))}
         </View>
-        {/* <View style={styles.otpContainer}>
-        {otp.map((digit, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputRefs.current[index] = ref)}
-            style={[styles.otpInput]}
-            value={digit}
-            onChangeText={(value) => handleOTPEdit(value, index)}
-            keyboardType="numeric"
-            maxLength={1}
-            autoFocus={index === 0}
-            // onFocus={() =>
-            //   inputRefs.current[index].setNativeProps({ text: "" })
-            // }
-            onFocus={handleFocused}
-            onBlur={()=> setFocused(false)}
-          />
-        ))}
-      </View> */}
+        
         <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.highlightColor}>Didn’t Receive the call?</Text>

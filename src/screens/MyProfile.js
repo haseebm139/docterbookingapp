@@ -9,10 +9,15 @@ import Logout from '../assets/assets/logout.svg'
 import { Avatar, Divider } from 'react-native-paper';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 const MyProfile = () => {
  const navigation = useNavigation()
+ const dispatch = useDispatch()
+ const user = useSelector(state => state.customerAccount)
+ const phone = useSelector(state => state.phone)
+ console.log(user)
   return (
     <View style={styles.container}>
         <View style={styles.my2}>
@@ -22,8 +27,8 @@ const MyProfile = () => {
       <View style={styles.sectionDone}>
             <Avatar.Image source={(require("../assets/assets/avatar.png"))}/>
             <View style={{ alignContent:"center", alignSelf:"center", gap: 10 }}>
-                <Text style={styles.textwhitelg}>Liz Merot</Text>
-                <Text style={styles.textsm}>+91 97179 20783</Text>
+                <Text style={styles.textwhitelg}>{user.firstName} {user.lastName}</Text>
+                <Text style={styles.textsm}>{phone}</Text>
             </View>
         </View>
       </View>

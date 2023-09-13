@@ -21,17 +21,20 @@ import {Avatar} from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import DoctorReviews from '../components/doctor/HomepageReviews';
 import {Dropdown} from 'react-native-element-dropdown';
+import { useSelector } from 'react-redux';
 
 const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const handleIndexChanged = index => {
     setCurrentIndex(index);
   };
+  const user = useSelector(state => state.customerAccount)
+  console.log(user)
   const navigation = useNavigation();
   const data = [
     {
       id: '1',
-      name: 'Physiotherapy',
+      name: 'Urologist',
       image: require('../assets/assets/cat1.png'),
     },
     {id: '2', name: 'Dietician', image: require('../assets/assets/cat2.png')},
@@ -76,6 +79,11 @@ const HomePage = () => {
     }
     return null;
   };
+
+  const handlePress = (item)=>{
+   console.log(item)
+   navigation.navigate("Specialist", {"search": item})
+  }
   return (
     <ScrollView
       style={{
@@ -85,7 +93,7 @@ const HomePage = () => {
       }}>
       <View style={styles.container}>
         <View style={{marginVertical: 20}}>
-          <Text style={styles.title}>Hello Abdullah</Text>
+          <Text style={styles.title}>Hello {user.firstName}</Text>
           <View style={{ flexDirection: "row", justifyContent:"space-between", alignItems:"center" }}>
             <Text style={styles.heading}>Find your specialist</Text>
             <View >
@@ -121,7 +129,7 @@ const HomePage = () => {
             <View key={item.id} style={styles.col3}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Specialist');
+                  handlePress(item.name);
                 }}>
                 <View style={styles.card}>
                   <Image

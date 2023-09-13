@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Picker,
   KeyboardAvoidingView,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import {Avatar, RadioButton} from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -24,6 +25,20 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../../../components/Statusbar';
+import axios from 'axios';
+import {Dropdown} from 'react-native-element-dropdown';
+import { useDispatch, useSelector } from 'react-redux';
+import {  
+  setId as Id,
+  setFirstName as fname,
+  setAddress as add,
+  setExperience as exp,
+  setFee as fees,
+  setHospital as hosp,
+  setProfession as prof,
+  setLastName as lname, 
+  setEmail as Email, 
+  setgender as gen } from '../../Redux/Reducer/CreateAccount/DoctorAccount'
 
 const ProgressBarWithGap = ({totalSteps, currentStep}) => {
   return (
@@ -48,9 +63,18 @@ const DoctorAccount = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [gender, setGender] = useState('');
+  const [fee, setFee] = useState('');
+  const [hospital, setHospital] = useState('');
+  const [experience, setExperience] = useState('');
+  const [address, setAddress] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const navigation = useNavigation();
+  const phone = useSelector((State) => State.phone)
+  const dispatch = useDispatch()
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state)=> state.doctorAccount)
+  console.log(phone)
 
   const handleImageUpload = () => {
     launchImageLibrary({mediaType: 'photo'}, response => {
@@ -59,9 +83,60 @@ const DoctorAccount = () => {
       }
     });
   };
-  const handlePress = () => {
-    navigation.goBack('DoctorHomePage');
-  };
+  // useEffect(()=>{
+  //   async function fetchData() {
+      
+  //   const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail",{
+  //       phone_no: phone,
+  //     }).then((response)=>{
+  //         console.log(response.data)
+  //         dispatch(Id(response.data.id))
+  //         dispatch(fname(response.data.f_name))
+  //         dispatch(lname(response.data.l_name))
+  //         dispatch(Email(response.data.email))
+  //         dispatch(prof(response.data.profession))
+  //         dispatch(gen(response.data.gender))
+  //         dispatch(hosp(response.data.hospital))
+  //         dispatch(exp(response.data.experience))
+  //         dispatch(fees(response.data.fee))
+  //         dispatch(add(response.data.address))
+  //       navigation.navigate("DoctorHome")
+        
+        
+  //     }).catch(err => console.log(err))
+  //   }
+  //   fetchData()
+  // }, [])
+  useEffect(() => {
+    async function fetchData() {
+      if (!user.id) {
+        try {
+          const response = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail", {
+            phone_no: phone,
+          });
+
+          if (response.data) {
+            console.log(response.data);
+            dispatch(Id(response.data.id));
+            dispatch(fname(response.data.f_name));
+            dispatch(lname(response.data.l_name));
+            dispatch(Email(response.data.email));
+            dispatch(prof(response.data.profession));
+            dispatch(gen(response.data.gender));
+            dispatch(hosp(response.data.hospital));
+            dispatch(exp(response.data.experience));
+            dispatch(fees(response.data.fee));
+            dispatch(add(response.data.address));
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      setLoading(false);
+    }
+
+    fetchData();
+  }, []);
 
   const handleCameraUpload = () => {
     launchCamera({mediaType: 'photo'}, response => {
@@ -73,12 +148,26 @@ const DoctorAccount = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 2;
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
       // Submit form data
-      navigation.navigate('DoctorHome');
+      const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/add",{
+        f_name: firstName,
+        l_name: lastName,
+        phone_no: phone,
+        email: email,
+        address: address,
+        gender: gender,
+        profession: value,
+        hospital:hospital,
+        experience:experience,
+        fee:fee
+      }).then((response)=>{
+        console.log(response.data)
+      }).catch(err => console.log(err))
+      navigation.replace('DoctorHome');
     }
   };
 
@@ -103,12 +192,45 @@ const DoctorAccount = () => {
         ? {...isLikedItem, selected: true}
         : {...isLikedItem, selected: false},
     );
+    let data = updatedState.map((res)=>{
+      if(res.selected == true){
+        setGender(res.name)
+        console.log(res.id)
+      }
+    })
     setIsLiked(updatedState);
   };
 
+  const [enabledShift, setEnabledShift] = useState(false)
+
+  const dropdown = [
+    {label: 'Urologist', value: 'Urologist'},
+    {label: 'Neurologist', value: 'Neurologist'},
+  ];
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+  console.log(value)
+  const renderLabel = () => {
+    if (value || isFocus) {
+      return <Text style={[styles.label, isFocus && {color: 'blue'}]} />;
+    }
+    return null;
+  };
+
+  const handlePress = async() => {
+   
+    navigation.goBack('DoctorHomePage');
+  };
+
   return (
-    <KeyboardAvoidingView  behavior='position' style={{ flex:1 }}>
-      <View>
+    <>
+    {user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
+        <>{navigation.reset({ index: 0, routes: [{ name: 'DoctorHome' }] })}</>
+      ) : loading ? ( // Render a loading spinner or some placeholder content until loading is complete
+        <Spinner />
+      ) : (
+    <View  style={styles.container} >
+      <ScrollView bounces={false} style={{ flex:1 }}>
       <MyStatusBar backgroundColor="transparent" barStyle= "dark-content" />
       <View style={{height: responsiveScreenHeight(70)}}>
         <View style={{flexDirection: 'row'}}>
@@ -140,7 +262,7 @@ const DoctorAccount = () => {
                 />
               </View>
             </TouchableOpacity>
-
+     <ScrollView>
             <View>
               <Text style={styles.inputLabel}>First Name</Text>
               <InputField
@@ -148,6 +270,7 @@ const DoctorAccount = () => {
                 value={firstName}
                 handleChange={text => setFirstName(text)}
                 keyboardType="default"
+                onChangeFocus={()=> setEnabledShift(true)}
               />
             </View>
             <View>
@@ -157,6 +280,7 @@ const DoctorAccount = () => {
                 value={lastName}
                 handleChange={text => setLastName(text)}
                 keyboardType="default"
+                
               />
             </View>
             <View>
@@ -197,26 +321,46 @@ const DoctorAccount = () => {
                 ))}
               </View>
             </View>
+            </ScrollView>
           </View>
         )}
         {step === 2 && (
           <View style={{ marginVertical: responsiveScreenHeight(2)}}>
             <Text style={styles.inputLabel}>Profession Type</Text>
             <View style={styles.inputSelect}>
-              <TouchableOpacity onPress={toggleDropdown}>
+            <Dropdown
+              style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={dropdown}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus ? 'Select item' : '...'}
+              searchPlaceholder="Search..."
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={item => {
+                setValue(item.value);
+                setIsFocus(false);
+              }}
+            />
+              {/* <TouchableOpacity onPress={toggleDropdown}>
                 <Text style={{fontFamily: 'Raleway-Medium', color: '#172331', paddingHorizontal: 10}}>
                   {selectedValue || 'Select'}
                 </Text>
                 <DropdownIcon
                   style={{position: 'absolute', right: 5, top: '30%'}}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* {dropdownVisible && (
                 <View
                   style={{
                     position: 'absolute',
-                    right: 0,
-                    bottom: 0,
+                    bottom: 20,
                     borderColor: '#EBEBEB',
                   }}>
                   {options.map((option, index) => (
@@ -242,8 +386,8 @@ const DoctorAccount = () => {
               </Text>
               <InputField
                 placeholder="Name"
-                value={email}
-                handleChange={text => setEmail(text)}
+                value={hospital}
+                handleChange={text => setHospital(text)}
                 keyboardType="default"
               />
             </View>
@@ -251,8 +395,8 @@ const DoctorAccount = () => {
               <Text style={styles.inputLabel}>Experience (yrs)</Text>
               <InputField
                 placeholder="0"
-                value={email}
-                handleChange={text => setEmail(text)}
+                value={experience}
+                handleChange={text => setExperience(text)}
                 keyboardType="default"
               />
             </View>
@@ -260,8 +404,8 @@ const DoctorAccount = () => {
               <Text style={styles.inputLabel}>Fee (in INR)</Text>
               <InputField
                 placeholder="0"
-                value={email}
-                handleChange={text => setEmail(text)}
+                value={fee}
+                handleChange={text => setFee(text)}
                 keyboardType="default"
               />
             </View>
@@ -269,8 +413,8 @@ const DoctorAccount = () => {
               <Text style={styles.inputLabel}>My Address</Text>
               <InputField
                 placeholder="Address"
-                value={email}
-                handleChange={text => setEmail(text)}
+                value={address}
+                handleChange={text => setAddress(text)}
                 keyboardType="default"
                 image={<Location />}
               />
@@ -278,13 +422,15 @@ const DoctorAccount = () => {
           </View>
         )}
       </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>
           {step < totalSteps ? 'Next' : 'Submit'}
         </Text>
       </TouchableOpacity>
-    </KeyboardAvoidingView>
+    </View>
+      )}
+      </>
   );
 };
 
@@ -407,7 +553,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
     fontFamily: 'PlusJakartaSans-ExtraBold',
-    marginTop: responsiveScreenHeight(10),
   },
   colorWhite: {
     fontFamily: 'PlusJakartaSans-ExtraBold',

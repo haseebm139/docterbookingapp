@@ -12,10 +12,14 @@ import { Avatar, Divider } from 'react-native-paper';
 import MyStatusBar from '../../../components/Statusbar';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 
 const DoctorProfile = () => {
     const navigation = useNavigation()
+    const doctordetails = useSelector(state => state.doctorAccount)
+    const phone = useSelector((State) => State.phone)
+    console.log(doctordetails)
   return (
     <View style={styles.container}>
         <MyStatusBar backgroundColor="transparent"/>
@@ -27,10 +31,10 @@ const DoctorProfile = () => {
             <Avatar.Image source={(require("../../../assets/assets/avatar.png"))}/>
             <View >
                 <View style={{flexDirection:"row", gap: 2, alignItems:"center"}} >
-                    <Text style={styles.textwhitelg}>Dr Liz Merot </Text>
+                    <Text style={styles.textwhitelg}>{doctordetails.firstName} {doctordetails.lastName} </Text>
                     <VerifiedIcon style={{alignSelf:"center", marginTop:5}}/>
                     </View>
-                <Text style={styles.textsm}>+91 97179 20783</Text>
+                <Text style={styles.textsm}>{phone}</Text>
                 <View style={{flexDirection: 'row', gap: 5, alignItems: 'center', marginTop: 3}}>
             <Text
               style={{
@@ -38,7 +42,7 @@ const DoctorProfile = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              Physiotherapist
+              {doctordetails.profession_type}
             </Text>
             <View style={styles.dotCircle} />
             <Text
@@ -47,7 +51,7 @@ const DoctorProfile = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              24 yrs exp
+              {doctordetails.experience}
             </Text>
           </View>
             </View>

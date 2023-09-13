@@ -14,7 +14,7 @@ function SplashScreen () {
   useEffect(()=>{
     const interval =  setInterval(()=>{
     navigation.replace("Home")
-     },5000)
+     },3000)
      return ()=>{
       clearInterval(interval)
      }
