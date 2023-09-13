@@ -182,7 +182,7 @@ const HomePage = () => {
             pagingEnabled={false}>
             <View style={{ flexDirection: 'row', gap: 20 }}>
               {/* Loop through popularDoctors and render each doctor's data */}
-              {popularDoctors.map((doctor, index) => (
+              {popularDoctors?.map((doctor, index) => (
                 <View style={styles.col4} key={index}>
                   {/* Render the doctor's data */}
                   <View style={{flexDirection: 'row', gap: 20}}>

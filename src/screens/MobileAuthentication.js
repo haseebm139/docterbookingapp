@@ -285,14 +285,15 @@ const MobileAuthentication = ({route}) => {
     navigation.goBack();
   }
  const onPress = async ()=>{
-  // try{
-  // const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-  //   setConfirm(confirmation);
-  //   console.log(confirmation.uid)
-  //   console.log("working")
-  // }catch(err){
-  //   console.log(err)
-  // }
+  
+  try{
+  const confirmation = await auth().signInWithPhoneNumber("+923222001221");
+    setConfirm(confirmation);
+    console.log("confirm",confirmation)
+    console.log("working")
+  }catch(err){
+    console.log("err", err)
+  }
   // const phoneFormatRegex = phoneFormatsByCountry[countryCode];
   //   if (!phoneFormatRegex.test(phoneNumber)) {
   //     setPhoneNumberError('Invalid phone number');
@@ -326,37 +327,37 @@ const MobileAuthentication = ({route}) => {
   })
  }
 const submitOTP = async(otp)=>{
-  // try{
-  //   const response = await confirm.confirm(otp);
-  //   console.log(response)
-  //   Alert.alert("sign In")
-  //   if(response){
+  try{
+    const response = await confirm.confirm(otp);
+    console.log(response)
+    Alert.alert("sign In")
+    if(response){
        if (role === "Customer") {
       navigation.navigate('CreateAccount', { role });
     } else {
       navigation.navigate('DoctorAccount', { role });
     }
     
-    // }
+    }
       
-  // }catch(err){
-  //   Alert.alert("invalid OTP")
-  //   setError(true)
+  }catch(err){
+    Alert.alert("invalid OTP")
+    setError(true)
     
-  //   console.log(err)
-  //   setLoading(false);
-  //   setNext(false); 
-  //   return// Reset 'next' to false to stay on the phone number input screen
+    console.log(err)
+    setLoading(false);
+    setNext(false); 
+    return// Reset 'next' to false to stay on the phone number input screen
 
-  //   // Show toast notification to the user
-  //   // Toast.show({
-  //   //   type: 'error',
-  //   //   text1: 'Error',
-  //   //   text2: 'There was an error while processing your request. Please try again later.',
-  //   //   position: 'bottom',
-  //   //   visibilityTime: 4000, // Duration of the toast message in milliseconds
-  //   // });
-  // }
+    // Show toast notification to the user
+    // Toast.show({
+    //   type: 'error',
+    //   text1: 'Error',
+    //   text2: 'There was an error while processing your request. Please try again later.',
+    //   position: 'bottom',
+    //   visibilityTime: 4000, // Duration of the toast message in milliseconds
+    // });
+  }
   
 }
 const handleResendOTP = async () => {
