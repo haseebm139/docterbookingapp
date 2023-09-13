@@ -19,6 +19,7 @@ import {
 } from './Redux/Reducer/CreateAccount/CustomerAccount';
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
+import { setId } from './Redux/Reducer/CreateAccount/DoctorAccount';
 
 const AccountScreen = ({route}) => {
   const [avatar, setAvatar] = useState(null);
@@ -41,11 +42,14 @@ const AccountScreen = ({route}) => {
   const navigation = useNavigation();
 
   const handleImageUpload = () => {
-    launchImageLibrary({ mediaType: 'photo' }, response => {
-      if (!response.didCancel && !response.errorCode) {
-        setAvatar(response.uri);
-        
+    let options = {
+      storageOptions:{
+        path: 'image'
       }
+    }
+    launchImageLibrary({ mediaType: 'photo' }, response => {
+      console.log(response.assets[0].uri)
+        setAvatar(response.assets[0].uri);   
     });
   };
   const [isLiked, setIsLiked] = useState([
@@ -53,53 +57,20 @@ const AccountScreen = ({route}) => {
     { id: 2, value: false, name: "Female", selected: false },
     { id: 3, value: false, name: "Other", selected: false }
   ]);
-// useEffect(()=>{
-//   async function fetchData() {
-//   const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/detail",{
-//       phone_no: phone,
-//     }).then((response)=>{
-//         console.log(response.data)
-//         dispatch(Id(response.data.id))
-//       dispatch(firstname(response.data.f_name))
-//       dispatch(lastname(response.data.l_name))
-//       dispatch(Email(response.data.email))
-//       dispatch(Gender(response.data.gender))
-//       // navigation.navigate("HomePage")
-//       if(user.id){
-//         return(
-//       navigation.reset({
-//         index: 0,
-//         routes: [{ name: 'HomePage' }],
-//       }));
-//     }
-      
-      
-//     }).catch(err => console.log(err))
-//   }
-//   fetchData()
-// }, [])
-useEffect(() => {
+useEffect(()=>{
   async function fetchData() {
-    if (!user.id) {
-      try {
-        const response = await axios.post("https://customdemowebsites.com/dbapi/paUsers/detail", {
-          phone_no: phone,
-        });
-
-        if (response.data) {
-          console.log(response.data);
-          dispatch(Id(response.data.id));
-          dispatch(firstname(response.data.f_name));
-          dispatch(lastname(response.data.l_name));
-          dispatch(Email(response.data.email));
-          dispatch(Gender(response.data.gender));
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    setLoading(false); // Set loading to false once the data is fetched or if user.id exists
+  const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/detail",{
+      phone_no: phone,
+    }).then((response)=>{
+        console.log(response.data)
+      dispatch(firstname(response.data.f_name))
+      dispatch(lastname(response.data.l_name))
+      dispatch(Email(response.data.email))
+      dispatch(Gender(response.data.gender))
+      navigation.navigate("HomePage")
+      
+      
+    }).catch(err => console.log(err))
   }
 
   fetchData();
@@ -137,21 +108,19 @@ useEffect(() => {
       phone_no: phone,
       email: email,
       address:"",
-      gender: gender
+      gender: gender,
+      image:avatar
     }).then((response)=>{
       console.log(response.data)
+      dispatch(setId(response.data.id))
       dispatch(firstname(firstName))
       dispatch(lastname(lastName))
       dispatch(Email(email))
       dispatch(Gender(gender))
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'HomePage' }],
-      });
+      navigation.navigate("HomePage")
     }).catch(err => console.log(err))
     
   }
-  
  
   return (
     <>
@@ -162,7 +131,6 @@ useEffect(() => {
       ) : (
    
     <KeyboardAvoidingView behavior='padding' style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
-      {role === "Customer" && 
       <View  style={styles.container}>
        <ScrollView>
       <View>
@@ -173,8 +141,8 @@ useEffect(() => {
         </View>
       <TouchableOpacity style={styles.avatarContainer} onPress={handleImageUpload}>
        
-        <View onPress={handleCameraUpload}>
-            <Avatar.Image size={72} source={avatar ? avatar : require("../assets/assets/avatar.png")}/>
+        <View>
+            <Avatar.Image size={72} source={avatar ? {uri:avatar} : require("../assets/assets/avatar.png")}/>
             <Image style={{position: "absolute", bottom:2, right:0}} source={require("../assets/assets/cameraIcon.png")}/>
         </View>
       </TouchableOpacity>
@@ -262,8 +230,6 @@ useEffect(() => {
         onPress={handlePress}
         />
         </View>
-  }
-  {role === "Doctor" && <DoctorAccount/>} 
     </KeyboardAvoidingView>
       )}
     </>

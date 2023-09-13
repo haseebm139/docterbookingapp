@@ -12,14 +12,22 @@ import { Avatar, Divider } from 'react-native-paper';
 import MyStatusBar from '../../../components/Statusbar';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFirstName, setId, setLastName } from '../../Redux/Reducer/CreateAccount/DoctorAccount';
 
 
 const DoctorProfile = () => {
     const navigation = useNavigation()
     const doctordetails = useSelector(state => state.doctorAccount)
     const phone = useSelector((State) => State.phone)
+    const dispatch = useDispatch()
     console.log(doctordetails)
+    const handlePress = ()=>{
+      dispatch(setFirstName(''))
+      dispatch(setId(''))
+      dispatch(setLastName(''))
+       navigation.navigate("Intro")
+    }
   return (
     <View style={styles.container}>
         <MyStatusBar backgroundColor="transparent"/>
@@ -107,7 +115,7 @@ const DoctorProfile = () => {
             </View>
             <ArrowIcon/>
         </View>
-        <TouchableOpacity onPress={()=> navigation.navigate("Intro")} style={styles.Logout}>
+        <TouchableOpacity onPress={handlePress} style={styles.Logout}>
             <Logout/>
             <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>

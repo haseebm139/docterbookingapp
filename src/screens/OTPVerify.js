@@ -17,15 +17,17 @@ import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
+import { useSelector } from 'react-redux';
 
-const OTPScreen = ({route}) => {
-  console.log(route)
+const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
+  // console.log(route)
   const navigation = useNavigation();
 
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(60);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const inputRefs = useRef([]);
+  const phone = useSelector(State => State.phone)
 
   useEffect(() => {
     
@@ -63,22 +65,22 @@ const OTPScreen = ({route}) => {
     setTimer(60);
     setIsTimerRunning(true);
   };
-  const {role} = route.params
-  const {confirm} = route.params;
-console.log(confirm)
+  // const {role} = route.params
+  // const {confirm} = route.params;
+// console.log(confirm)
 
   const handlePress = () => {
     navigation.goBack();
   };
   const onPress = async() => {
-    console.log("WORKING")
-    try{
-      let data = await confirm.confirm(otp);
-      console.log("sign IN")
-       navigation.navigate('CreateAccount', {role});
-    }catch(err){
-      Alert("invalid OTP")
-    }
+    // try{
+    //   let data = await confirm.confirm(otp);
+    //   console.log("sign IN")
+    //    navigation.navigate('CreateAccount', {role});
+    // }catch(err){
+    //   Alert("invalid OTP")
+    // }
+    submitOTP(otp)
    
   };
   return (
@@ -90,7 +92,7 @@ console.log(confirm)
         <View style={styles.flexColumn}>
           <Text style={styles.h5}>We have sent a verification code to</Text>
           <Text style={{fontFamily: 'Raleway-SemiBold', color: '#172331'}}>
-            +91 9540826565
+           {phone}
           </Text>
         </View>
        <View style={styles.otpContainer}>

@@ -9,6 +9,8 @@ import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } fro
 import { useNavigation } from '@react-navigation/native';
 
 const Visits = () => {
+  
+  // const {detail} = item
   const Navigation = useNavigation()
   return (
     <View style={styles.appointContainer}>

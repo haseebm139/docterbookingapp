@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {
   responsiveScreenWidth,
@@ -22,9 +22,30 @@ import Swiper from 'react-native-swiper';
 import DoctorReviews from '../components/doctor/HomepageReviews';
 import {Dropdown} from 'react-native-element-dropdown';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [popularDoctors, setPopularDoctors] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.get(
+          'https://customdemowebsites.com/dbapi/drUsers/popular_doctors/list'
+        );
+        console.log(res.data)
+        setPopularDoctors(res.data.data);
+        setIsDataLoaded(true);
+      } catch (error) {
+        console.error(error);
+        setIsDataLoaded(true);
+      }
+    }
+    fetchData();
+  }, []);
+
   const handleIndexChanged = index => {
     setCurrentIndex(index);
   };
@@ -37,7 +58,7 @@ const HomePage = () => {
       name: 'Urologist',
       image: require('../assets/assets/cat1.png'),
     },
-    {id: '2', name: 'Dietician', image: require('../assets/assets/cat2.png')},
+    {id: '2', name: 'Physiotherapy', image: require('../assets/assets/cat2.png')},
     {
       id: '3',
       name: 'Mental Wellness',
@@ -84,6 +105,7 @@ const HomePage = () => {
    console.log(item)
    navigation.navigate("Specialist", {"search": item})
   }
+  console.log(popularDoctors)
   return (
     <ScrollView
       style={{
@@ -151,7 +173,359 @@ const HomePage = () => {
           ))}
         </View>
 
+        {isDataLoaded ? (
         <View>
+          <Text style={styles.heading}>Popular Doctor</Text>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled={false}>
+            <View style={{ flexDirection: 'row', gap: 20 }}>
+              {/* Loop through popularDoctors and render each doctor's data */}
+              {popularDoctors?.map((doctor, index) => (
+                <View style={styles.col4} key={index}>
+                  {/* Render the doctor's data */}
+                  <View style={{flexDirection: 'row', gap: 20}}>
+              <View style={styles.col4}>
+                <View style={styles.horizontalCard}>
+                  <Poplular2 />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 2,
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#172331',
+                        fontFamily: 'Raleway-Regular',
+                        fontWeight: 700,
+                      }}>
+                      Dr Rahul
+                    </Text>
+                    <Verified />
+                  </View>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    Physiotherapist
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    8 yrs exp
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 2,
+                        marginVertical: 8,
+                      }}>
+                      <Image source={require('../assets/assets/star.png')} />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 600,
+                          fontSize: 12,
+                        }}>
+                        4.1
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}>
+                      <Image
+                        source={require('../assets/assets/location.png')}
+                      />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 500,
+                          fontSize: 12,
+                        }}>
+                        Patparganj
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      borderColor: '#4464D9',
+                      borderWidth: 1,
+                      backgroundColor: '#fff',
+                      borderRadius: 74,
+                      width: 70,
+                      height: 30,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: '#4464D9',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        fontFamily: 'Raleway-SemiBold',
+                        fontWeight: 600,
+                      }}>
+                      Book
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.col4}>
+                <View style={styles.horizontalCard}>
+                  <Poplular />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 2,
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#172331',
+                        fontFamily: 'Raleway-Regular',
+                        fontWeight: 700,
+                      }}>
+                      Dr Rahul
+                    </Text>
+                    <Verified />
+                  </View>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    Physiotherapist
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    8 yrs exp
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 2,
+                        marginVertical: 8,
+                      }}>
+                      <Image source={require('../assets/assets/star.png')} />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 600,
+                          fontSize: 12,
+                        }}>
+                        4.1
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}>
+                      <Image
+                        source={require('../assets/assets/location.png')}
+                      />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 500,
+                          fontSize: 12,
+                        }}>
+                        Patparganj
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      borderColor: '#4464D9',
+                      borderWidth: 1,
+                      backgroundColor: '#fff',
+                      borderRadius: 74,
+                      width: 70,
+                      height: 30,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: '#4464D9',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        fontFamily: 'Raleway-SemiBold',
+                        fontWeight: 600,
+                      }}>
+                      Book
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.col4}>
+                <View style={styles.horizontalCard}>
+                  <Poplular2 />
+                </View>
+                <View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 2,
+                      marginVertical: 5,
+                    }}>
+                    <Text
+                      style={{
+                        color: '#172331',
+                        fontFamily: 'Raleway-Regular',
+                        fontWeight: 700,
+                      }}>
+                      Dr Rahul
+                    </Text>
+                    <Verified />
+                  </View>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    Physiotherapist
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#172331',
+                      fontFamily: 'Raleway-Regular',
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}>
+                    8 yrs exp
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 2,
+                        marginVertical: 8,
+                      }}>
+                      <Image source={require('../assets/assets/star.png')} />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 600,
+                          fontSize: 12,
+                        }}>
+                        4.1
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 5,
+                      }}>
+                      <Image
+                        source={require('../assets/assets/location.png')}
+                      />
+                      <Text
+                        style={{
+                          color: '#172331',
+                          fontFamily: 'Raleway-Regular',
+                          fontWeight: 500,
+                          fontSize: 12,
+                        }}>
+                        Patparganj
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      borderColor: '#4464D9',
+                      borderWidth: 1,
+                      backgroundColor: '#fff',
+                      borderRadius: 74,
+                      width: 70,
+                      height: 30,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        color: '#4464D9',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        fontFamily: 'Raleway-SemiBold',
+                        fontWeight: 600,
+                      }}>
+                      Book
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+                  
+                  {/* ... */}
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+          {/* ... */}
+        </View>
+      ) : (
+        <View>
+          <Text>Loading...</Text>
+        </View>
+      )}
+
+        {/* <View>
           <Text style={styles.heading}>Popular Doctor</Text>
           <ScrollView
             horizontal={true}
@@ -485,126 +859,10 @@ const HomePage = () => {
             </View>
           </ScrollView>
           <View>
-            {/* <Swiper
-              loop={false}
-              onIndexChanged={handleIndexChanged}
-              showsPagination={false}
-              dot={<View style={styles.dot} />}
-              activeDot={<View style={styles.activeDot} />}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 30,
-                  width: '100%',
-                }}>
-                <View style={{gap: 3, width: responsiveScreenWidth(50)}}>
-                  <Quotation />
-                  <Text style={styles.reviewer}>
-                    Heal Slot help my team wellness productivity.
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-SemiBold',
-                      fontSize: 12,
-                      color: '#172331',
-                    }}>
-                    Daniel Brown
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-Medium',
-                      fontSize: 10,
-                      color: '#172331',
-                    }}>
-                    CEO, Barone INC
-                  </Text>
-                </View>
-                <View>
-                  <Reviewer />
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 30,
-                  width: '100%',
-                }}>
-                <View style={{gap: 3, width: responsiveScreenWidth(50)}}>
-                  <Quotation />
-                  <Text style={styles.reviewer}>
-                    Heal Slot help my team wellness productivity.
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-SemiBold',
-                      fontSize: 12,
-                      color: '#172331',
-                    }}>
-                    Daniel Brown
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-Medium',
-                      fontSize: 10,
-                      color: '#172331',
-                    }}>
-                    CEO, Barone INC
-                  </Text>
-                </View>
-                <View>
-                  <Avatar.Image size={62} />
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 30,
-                  width: '100%',
-                }}>
-                <View style={{gap: 3, width: responsiveScreenWidth(50)}}>
-                  <Quotation />
-                  <Text style={styles.reviewer}>
-                    Heal Slot help my team wellness productivity.
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-SemiBold',
-                      fontSize: 12,
-                      color: '#172331',
-                    }}>
-                    Daniel Brown
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: 'Raleway-Medium',
-                      fontSize: 10,
-                      color: '#172331',
-                    }}>
-                    CEO, Barone INC
-                  </Text>
-                </View>
-                <View>
-                  <Avatar.Image size={62} />
-                </View>
-              </View>
-            </Swiper>
-            <View style={styles.dotsContainer}>
-              <View
-                style={[styles.dot, currentIndex === 0 && styles.activeDot]}
-              />
-              <View
-                style={[styles.dot, currentIndex === 1 && styles.activeDot]}
-              />
-              <View
-                style={[styles.dot, currentIndex === 2 && styles.activeDot]}
-              />
-            </View> */}
+           
             <DoctorReviews />
           </View>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );

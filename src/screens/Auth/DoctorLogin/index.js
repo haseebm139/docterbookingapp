@@ -39,6 +39,7 @@ import {
   setLastName as lname, 
   setEmail as Email, 
   setgender as gen } from '../../Redux/Reducer/CreateAccount/DoctorAccount'
+import { Spinner } from '../../../components/Spinner';
 
 const ProgressBarWithGap = ({totalSteps, currentStep}) => {
   return (

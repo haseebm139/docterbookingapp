@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import ArrowIcon from '../assets/assets/arrow_back_ios.svg'
 import SettingImg from '../assets/assets/setting.svg'
@@ -10,6 +10,9 @@ import { Avatar, Divider } from 'react-native-paper';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { setFirstName, setId } from './Redux/Reducer/CreateAccount/CustomerAccount';
+import { setLastName } from './Redux/Reducer/CreateAccount/DoctorAccount';
 
 
 const MyProfile = () => {
@@ -17,7 +20,32 @@ const MyProfile = () => {
  const dispatch = useDispatch()
  const user = useSelector(state => state.customerAccount)
  const phone = useSelector(state => state.phone)
+ const [img, setImg] = useState("")
  console.log(user)
+//  useEffect(()=>{
+//   const res = axios.get("https://customdemowebsites.com/dbapi/paUsers/13")
+//   console.log(res)
+//  },[])
+ useEffect(() => {
+  async function fetchData() {
+      try {
+        const response = await axios.get("https://customdemowebsites.com/dbapi/paUsers/13")
+        console.log(response.data.img)
+        setImg(response.data.img)
+      } catch (err) {
+        console.log(err);
+      }
+  }
+
+  fetchData();
+}, []);
+
+const handlePress = ()=>{
+  dispatch(setFirstName(''))
+  dispatch(setId(''))
+  dispatch(setLastName(''))
+   navigation.navigate("Intro")
+}
   return (
     <View style={styles.container}>
         <View style={styles.my2}>
@@ -25,7 +53,9 @@ const MyProfile = () => {
       </View>
       <View style={styles.profileDetail}>
       <View style={styles.sectionDone}>
-            <Avatar.Image source={(require("../assets/assets/avatar.png"))}/>
+            {/* <Avatar.Image source={(require("../assets/assets/avatar.png"))}/> */}
+            {/* <Avatar.Image source={(require("../assets/assets/avatar.png"))}/> */}
+            <Avatar.Image source={img ? {uri:img} : require("../assets/assets/avatar.png")}/>
             <View style={{ alignContent:"center", alignSelf:"center", gap: 10 }}>
                 <Text style={styles.textwhitelg}>{user.firstName} {user.lastName}</Text>
                 <Text style={styles.textsm}>{phone}</Text>
@@ -76,7 +106,7 @@ const MyProfile = () => {
             </View>
             <ArrowIcon/>
         </View>
-        <TouchableOpacity onPress={()=> navigation.navigate("Intro")} style={styles.Logout}>
+        <TouchableOpacity onPress={handlePress} style={styles.Logout}>
             <Logout/>
             <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>

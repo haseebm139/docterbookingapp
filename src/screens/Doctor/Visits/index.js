@@ -6,20 +6,33 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  FlatList
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
-import ClockImg from '../../../assets/assets/pace.svg';
-import PhoneIcon from '../../../assets/assets/phoneicon.svg';
+// import {FlatList} from 'react-native-gesture-handler';
+// import ClockImg from '../../../assets/assets/pace.svg';
+// import PhoneIcon from '../../../assets/assets/phoneicon.svg';
 import PencilIcon from '../../../assets/assets/border_color.svg';
 import {Avatar, Divider} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Visits from '../../../components/doctor/Visits';
 import MyStatusBar from '../../../components/Statusbar';
-import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
+import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import ClockImg from '../../../assets/assets/pace.svg';
+import PhoneIcon from '../../../assets/assets/phoneicon.svg';
+import Location from '../../../assets/assets/location.svg';
+// import PencilIcon from '../../../assets/assets/border_color.svg';
+// import { Avatar, Divider } from 'react-native-paper';
 
 const TotalVisits = () => {
   const [status, setStatus] = useState('Upcoming');
-  const [dataList, setDataList] = useState(data);
+  const [dataList, setDataList] = useState([]);
+  const [upcomingData, setUpcomingData] = useState([]);
+  const [pastData, setPastData] = useState([]);
+  // const {upcoming_visits} = useSelector(state => state.doctorDetail.userDetails)
+  const user = useSelector(state => state.doctorAccount)
+  console.log(user)
 
   const navigation = useNavigation()
   const ListTab = [
@@ -84,9 +97,81 @@ const TotalVisits = () => {
     }
     setStatus(status);
   };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `https://customdemowebsites.com/dbapi/visits/dr/${user.id}`
+        );
+        console.log(response.data)
+        const data = response.data;
+        const upcomingData = data.filter((item) => item.is_pending === 1);
+        const pastData = data.filter((item) => item.is_done === 1);
+        setDataList(upcomingData);
+        // Save the filtered data in the "Upcoming" and "Past" tabs
+        setUpcomingData(upcomingData);
+        setPastData(pastData);
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
-  console.log(dataList)
+    fetchData();
+  }, []);
 
+  console.log(upcomingData)
+const renderItems = ({item, index})=>{
+  console.log(item)
+  return (
+    <View style={styles.appointContainer}>
+    <View style={styles.leftLine} />
+  <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+      <View>
+        <Text style={styles.textsm}>Visit Date & Time</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+            marginVertical: responsiveScreenHeight(1)
+          }}>
+          <ClockImg />
+          <Text style={styles.h1}>Fri, 20 Mar  |  07:00 - 07:30 PM</Text>
+          
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+            marginBottom: responsiveScreenHeight(2)
+          }}>
+          <Location />
+          <Text style={styles.h2}>{item.address}</Text>
+          
+        </View>
+      </View>
+       <PhoneIcon />
+      
+    </View>
+    <Divider />
+    <View style={{marginTop: responsiveScreenHeight(1), flexDirection:"row", gap: 10, alignItems:"center"}}>
+    <Avatar.Image
+        size={responsiveScreenWidth(6)}
+        source={require('../../../assets/assets/doctorimg.png')}
+      />
+      <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails")}>
+        <Text style={styles.name}>Mehtab Alam</Text>
+        </TouchableOpacity>
+    </View>
+</View>
+  )
+}
  
   return (
     <View style={styles.container}>
@@ -118,15 +203,51 @@ const TotalVisits = () => {
          }}
         renderItem={renderItem}
       /> */}
-      {data?.map((item, e)=>{
-    const leftLine = [ item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
-    return (
-        <>
-      {status === "Upcoming" && item.statusCode == "Upcoming" && <Visits/>}
-      {status === "Past" && item.statusCode == "Past" && <Visits/>}
-      </>
-    );
-  })}
+        {/* {data?.map((item, e)=>{
+      const leftLine = [ item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
+      return (
+          <>
+        {status === "Upcoming" && item.statusCode == "Upcoming" && <Visits/>}
+        {status === "Past" && item.statusCode == "Past" && <Visits/>}
+        </>
+      );
+    })} */}
+    {/* <View style={styles.tabcontainer}>
+        {ListTab.map(e => (
+          <TouchableOpacity
+            onPress={() => setStatusFilter(e.status)}
+            style={[styles.btnTab, status === e.status && styles.btnActiveTab]}>
+            <Text
+              style={[
+                styles.tabText,
+                status === e.status && styles.tabActiveText,
+              ]}>
+              {e.status}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View> */}
+
+{status === 'Upcoming' && (
+        <FlatList
+          data={upcomingData}
+          renderItem={renderItems}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
+
+      {status === 'Past' && (
+        <FlatList
+          data={pastData}
+          renderItem={({ item }) => (
+            <Visits item={item}/>
+          )}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
+
+
+
     </View>
   );
 };
@@ -311,7 +432,44 @@ const styles = StyleSheet.create({
     alignItems:"center",
     justifyContent:"center",
 textAlign:"center"
-  }
+  },
+  appointContainer: {
+    borderWidth: 1,
+    borderColor: '#E9ECF2',
+    padding: 10,
+    gap: 5,
+    borderRadius: 12,
+    marginVertical: responsiveScreenHeight(1),
+  },
+h1: {
+    color: '#172331',
+    fontSize: 14,
+    fontFamily: 'Raleway-SemiBold',
+  },
+h2: {
+    color: '#172331',
+    fontSize: 12,
+    fontFamily: 'Raleway-Regular',
+  },
+  textsm: {
+    color: '#172331',
+    fontFamily: 'Raleway-Medium',
+    fontSize: 12,
+  },
+  name:{
+    fontFamily:"Raleway-Bold",
+    color: '#172331',
+    fontSize: responsiveFontSize(1.7)
+  },
+  leftLine: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#4464D9',
+    height: '100%',
+    position:"absolute",
+    borderRadius: 10,
+    left: -1,
+    top: 10
+  },
 });
 
 export default TotalVisits;
