@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  FlatList
 } from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+// import {FlatList} from 'react-native-gesture-handler'; 
 import ClockImg from '../../assets/assets/pace.svg';
 import PhoneIcon from '../../assets/assets/phoneicon.svg';
 import PencilIcon from '../../assets/assets/border_color.svg';
@@ -17,10 +18,15 @@ import {Avatar, Divider} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveScreenFontSize, responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../../components/Statusbar';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const Schedule = () => {
   const [status, setStatus] = useState('Upcoming');
-  const [dataList, setDataList] = useState(data);
+  const [dataList, setDataList] = useState([]);
+  const [upcomingData, setUpcomingData] = useState([]);
+  const [pastData, setPastData] = useState([]);
+  const user = useSelector((state) => state.customerAccount);
 
   const navigation = useNavigation()
   const ListTab = [
@@ -31,139 +37,215 @@ const Schedule = () => {
       status: 'Past',
     },
   ];
-  const data = [
-    {
-        id: 1,
-      name: 'Dr. Neeraj Mehraniya',
-      specialist: 'Physiotherapist',
-      experience: '24 yrs exp',
-      AppointmentDate: 'Fri, 20 Mar',
-      AppointmentTime: ' 07:00 - 07:30 PM',
-      status: 'Upcoming',
-    },
-    {
-        id: 2,
-      name: 'Dr. Neeraj Mehraniyaaaaaaaaaaaa',
-      specialist: 'Physiotherapist',
-      experience: '24 yrs exp',
-      AppointmentDate: 'Fri, 20 Mar',
-      AppointmentTime: ' 07:00 - 07:30 PM',
-      status: 'Past',
-      statusCode: "Completed"
-    },
-{
-    id: 3,
-    name: 'Dr. Neeraj Mehraniya',
-    specialist: 'Physiotherapist',
-    experience: '24 yrs exp',
-    AppointmentDate: 'Fri, 20 Mar',
-    AppointmentTime: ' 07:00 - 07:30 PM',
-    status: 'Past',
-    statusCode: "Cancelled"
-  }
+//   const data = [
+//     {
+//         id: 1,
+//       name: 'Dr. Neeraj Mehraniya',
+//       specialist: 'Physiotherapist',
+//       experience: '24 yrs exp',
+//       AppointmentDate: 'Fri, 20 Mar',
+//       AppointmentTime: ' 07:00 - 07:30 PM',
+//       status: 'Upcoming',
+//     },
+//     {
+//         id: 2,
+//       name: 'Dr. Neeraj Mehraniyaaaaaaaaaaaa',
+//       specialist: 'Physiotherapist',
+//       experience: '24 yrs exp',
+//       AppointmentDate: 'Fri, 20 Mar',
+//       AppointmentTime: ' 07:00 - 07:30 PM',
+//       status: 'Past',
+//       statusCode: "Completed"
+//     },
+// {
+//     id: 3,
+//     name: 'Dr. Neeraj Mehraniya',
+//     specialist: 'Physiotherapist',
+//     experience: '24 yrs exp',
+//     AppointmentDate: 'Fri, 20 Mar',
+//     AppointmentTime: ' 07:00 - 07:30 PM',
+//     status: 'Past',
+//     statusCode: "Cancelled"
+//   }
+//   ];
+const setStatusFilter = (status) => {
+  setStatus(status);
+};
+const renderItem = ({ item, index }) => {
+  console.log(item);
+  const leftLine = [
+    item.is_done === 0 && styles.linegreen,
+    item.is_pending === 1 && styles.linered,
+    !item.statusCode && styles.lineblue,
   ];
-  const setStatusFilter = status => {
-     
-    if(!status){
-        setDataList(data)
-    }
-    else{
-        
-      setDataList([...data.filter(e=> e.status === status)])
-    }
-    setStatus(status);
-  };
-  console.log(dataList)
-  function renderItem({ item, index }) {
-    const leftLine = [item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
-    return (
-      <View key={index} style={styles.appointContainer}>
-        <View style={leftLine} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View>
-            <Text style={styles.textsm}>Appointment Date</Text>
+  const detailData = JSON.parse(item.detail);
+  const inputDateString = item.start_date_time;
+  const inputDate = new Date(inputDateString);
+  
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  
+  const dayOfWeek = daysOfWeek[inputDate.getDay()];
+  const dayOfMonth = inputDate.getDate();
+  const month = months[inputDate.getMonth()];
+  
+  const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
+  // const inputDateString = item.start_date_time;
+  // const inputDate = new Date(inputDateString);
+  const currentDate = new Date();
+
+  const isPast = inputDate < currentDate;
+  return (
+    <View key={index} style={styles.appointContainer}>
+      <View style={leftLine} />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <View>
+          <Text style={styles.textsm}>Appointment Date</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 5,
+              alignItems: 'center',
+              marginVertical: 10,
+            }}
+          >
+            <ClockImg />
+            {/* <Text style={styles.h1}>{detailData.AppointmentDate}</Text> */}
+            <Text style={styles.h1}>{formattedDate} </Text>  
             <View
               style={{
-                flexDirection: 'row',
-                gap: 5,
-                alignItems: 'center',
-                marginVertical: 10,
-              }}>
-              <ClockImg />
-              <Text style={styles.h1}>{item.AppointmentDate}</Text>
-              <View
-                style={{
-                  borderLeftColor: '#172331',
-                  borderLeftWidth: 2,
-                  paddingHorizontal: 10,
-                }}>
-                <Text style={styles.h1}>{item.AppointmentTime}</Text>
-              </View>
-            </View>
-          </View>
-          {!item.statusCode && <PhoneIcon />}
-
-        </View>
-        <Divider />
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 20,
-            alignItems: 'flex-start',
-            marginVertical: 20,
-          }}>
-          <Avatar.Image
-            size={48}
-            source={require('../../assets/assets/doctorimg.png')} />
-          <View style={{ gap: 5 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-              <Text style={{ color: '#172331', fontFamily: 'Raleway-Bold' }}>
-                {item.name}
-              </Text>
-              <Image source={require('../../assets/assets/verified.png')} />
-            </View>
-            <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
-              <Text
-                style={{
-                  color: '#172331',
-                  fontSize: 12,
-                  fontFamily: 'Raleway-SemiBold',
-                }}>
-                {item.specialist}
-              </Text>
-              <View style={styles.dotCircle} />
-              <Text
-                style={{
-                  color: '#172331',
-                  fontSize: 12,
-                  fontFamily: 'Raleway-SemiBold',
-                }}>
-                {item.experience}
-              </Text>
+                borderLeftColor: '#172331',
+                borderLeftWidth: 2,
+                paddingHorizontal: 10,
+              }}
+            >
+              <Text style={styles.h1}>{detailData.from}- {detailData.to}</Text>
             </View>
           </View>
         </View>
-        {item.statusCode && <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        {!item.statusCode && <PhoneIcon />}
+      </View>
+      <Divider />
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 20,
+          alignItems: 'flex-start',
+          marginVertical: 20,
+        }}
+      >
+        <Avatar.Image
+          size={48}
+          source={require('../../assets/assets/doctorimg.png')}
+        />
+        <View style={{ gap: 5 }}>
+          <View
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}
+          >
+            <Text style={{ color: '#172331', fontFamily: 'Raleway-Bold' }}>
+             Dr {item.f_name} {item.l_name}
+            </Text>
+            <Image source={require('../../assets/assets/verified.png')} />
+          </View>
+          <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+            <Text
+              style={{
+                color: '#172331',
+                fontSize: 12,
+                fontFamily: 'Raleway-SemiBold',
+              }}
+            >
+              {item.profession}
+            </Text>
+            <View style={styles.dotCircle} />
+            <Text
+              style={{
+                color: '#172331',
+                fontSize: 12,
+                fontFamily: 'Raleway-SemiBold',
+              }}
+            >
+              {item.experience}
+            </Text>
+          </View>
+        </View>
+      </View>
+      {item.is_done === 1 && (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Tag label="Completed" color="success" />
-          <TouchableOpacity onPress={() => {
-            navigation.navigate("Review");
-          } }>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Review',{item});
+            }}
+          >
             <View style={styles.button}>
               <PencilIcon />
-              <Text style={{ fontFamily: "Raleway-Medium", fontSize: 12, color: "#fff" }}>Write a Review</Text>
+              <Text
+                style={{
+                  fontFamily: 'Raleway-Medium',
+                  fontSize: 12,
+                  color: '#fff',
+                }}
+              >
+                Write a Review
+              </Text>
             </View>
           </TouchableOpacity>
+        </View>
+      )}
+      {isPast && item.is_done === 0 && (
+        // <Tag label="Cancelled" color="danger" />
+        <View style={{width:95}}>
+        <Tag label="cancelled" color="danger" />
+        </View>
+      )}
+      
+    </View>
+  );
+};
+useEffect(() => {
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        `https://customdemowebsites.com/dbapi/visits/pa/${user.id}`
+      );
+      const data = response.data;
+      
+      // Get the current date
+      const currentDate = new Date();
 
-        </View>}
+      // Filter data for upcoming and past based on date conditions
+      const upcomingData = data.filter((item) => {
+        const visitDate = new Date(item.start_date_time);
+        return item.is_pending === 1 && visitDate > currentDate;
+      });
+      
+      const pastData = data.filter((item) => {
+        const visitDate = new Date(item.start_date_time);
+        return item.is_pending === 1 || item.is_done === 1  && visitDate < currentDate;
+      });
 
-      </View>
-    );
+      setDataList(upcomingData);
+      setUpcomingData(upcomingData);
+      setPastData(pastData);
+    } catch (err) {
+      console.log(err);
+    }
   }
+
+  fetchData();
+}, [user.id]);
+  console.log(pastData)
+ 
   return (
     <ScrollView style={styles.container}>
       <MyStatusBar backgroundColor="transparent"/>
@@ -192,7 +274,7 @@ const Schedule = () => {
          }}
         renderItem={renderItem}
       /> */}
-      {data?.map((item, e)=>{
+      {/* {data?.map((item, e)=>{
     const leftLine = [ item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
     return (
       <View key={item.id}>
@@ -372,7 +454,37 @@ const Schedule = () => {
     </View>}
     </View>
     );
-  })}
+  })} */}
+    <View style={styles.flatListContainer}>
+        {status === 'Upcoming' && (
+          <View>
+            {upcomingData.length > 0 ? (
+              <FlatList
+                data={upcomingData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+              />
+            ) : (
+              <Text style={styles.noDataText}>No data found</Text>
+            )}
+          </View>
+        )}
+        {status === 'Past' && (
+          <View >
+            {pastData.length > 0 ? (
+              <FlatList
+                data={pastData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+              />
+            ) : (
+              <Text style={styles.noDataText}>No data found</Text>
+            )}
+          </View>
+        )}
+      </View>
     </ScrollView>
   );
 };
@@ -383,6 +495,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flex: 1,
     paddingTop: responsiveScreenHeight(4)
+  },
+  flatListContainer: {
+    maxHeight: responsiveScreenHeight(70), // Set the desired height for the FlatList
+  },
+  upcomingDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: responsiveScreenHeight(70), // Set the desired minimum height for the container
+  },
+  pastDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: responsiveScreenHeight(70), // Set the desired minimum height for the container
+  },
+  noDataText: {
+    fontSize: 16,
+    fontFamily: 'Raleway-Medium',
+    color: '#666E7D',
   },
   appointContainer: {
     marginVertical: 10,

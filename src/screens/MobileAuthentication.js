@@ -217,7 +217,7 @@
 
 
 
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Alert } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import Header from "../components/Header/index"
@@ -304,7 +304,7 @@ const MobileAuthentication = ({route}) => {
   const data = await axios.post("https://customdemowebsites.com/dbapi/auth/add",{
     phone_no: phoneNumber
   }).then((response)=>{
-    console.log(response)
+    console.log(response.data)
     dispatch(phone(phoneNumber))
     setLoading(false)
     // navigation.navigate('OTPVerify', {
@@ -393,6 +393,7 @@ if(next === true){
         <Text style={styles.h1}>Enter your mobile no.</Text>
         
         {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
+       
         {/* <InputField
           style={styles.input}
           onFocus={onChangeFocus}
@@ -436,6 +437,23 @@ if(next === true){
           
         }}
         />
+
+<ScrollView>
+                    <GooglePlacesAutocomplete
+                        placeholder='Search destination'
+                        minLength={2}
+                        onPress={(data, details = null) => {
+                            // 'details' is provided when fetchDetails = true
+                            console.log(data, details);
+                        }}
+                        query={{
+                            key: "AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY",
+                            language: 'en',
+                        }}
+
+
+                    />
+                </ScrollView>
        
         {/* <TextInput placeholder='OTP'
         onChangeText={value => setOtpInput(value)}

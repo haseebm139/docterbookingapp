@@ -8,7 +8,8 @@ import { Avatar, Divider } from 'react-native-paper';
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 
-const Visits = () => {
+const Visits = ({formattedDate, detailData}) => {
+  console.log(formattedDate, detailData)
   
   // const {detail} = item
   const Navigation = useNavigation()
@@ -31,7 +32,7 @@ const Visits = () => {
                 marginVertical: responsiveScreenHeight(1)
               }}>
               <ClockImg />
-              <Text style={styles.h1}>Fri, 20 Mar  |  07:00 - 07:30 PM</Text>
+              <Text style={styles.h1}>{formattedDate} |  {detailData.from}- {detailData.to}</Text>
               
             </View>
             <View

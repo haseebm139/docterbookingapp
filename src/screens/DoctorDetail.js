@@ -355,26 +355,150 @@ import { useNavigation } from '@react-navigation/native';
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../components/Statusbar';
 import axios from 'axios';
+import { parse, format } from 'date-fns';
+import Geolocation from '@react-native-community/geolocation';
+import { useSelector } from 'react-redux';
 
 const DoctorDetail = ({route}) => {
-  const id = route.params
-  console.log(id)
+  const { selectedDate, selectedTime, item ,visitId} = route.params;
+  console.log(selectedDate, selectedTime, visitId)
+  
   const [data, setData] = useState([])
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState(null);
+  const parsedDate = parse(selectedDate, 'yyyy-MM-dd', new Date());
+  const user = useSelector((state)=> state.customerAccount)
+  const phone = useSelector((State) => State.phone)
+  console.log(user, phone)
+  
+console.log(address)
+  // // Format the date to "Fri, 10 Mar" format
+  const formattedDate = format(parsedDate, 'E, d MMM');
+  // console.log(formattedDate)
+  
   const  navigation = useNavigation()
-  useEffect(() => {
-    async function fetchData() {
-        try {
-          const response = await axios.get(`https://customdemowebsites.com/dbapi/drUsers/${id}`)
-          // console.log(response.data)
-          setData(response.data)
-        } catch (err) {
-          console.log(err);
-        }
-    }
+  // useEffect(() => {
+  //   async function fetchData() {
+  //       try {
+  //         const response = await axios.get(`https://customdemowebsites.com/dbapi/drUsers/${id}`)
+  //         // console.log(response.data)
+  //         setData(response.data)
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //   }
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   console.log(data)
+  // const getCurrentLocation = () => {
+  //   Geolocation.getCurrentPosition(
+  //     async (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       console.log('Current Latitude:', latitude);
+  //       console.log('Current Longitude:', longitude);
+  
+  //       try {
+  //         const response = await axios.get(
+  //           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_API_KEY}`
+  //         );
+  
+  //         if (response.data.status === 'OK') {
+  //           const addressComponents = response.data.results[0].address_components;
+  //           const formattedAddress = response.data.results[0].formatted_address;
+  //           console.log('Complete Address:', formattedAddress);
+  
+  //           // You can now use the 'formattedAddress' in your patient address field or perform other operations with the address components.
+  //         } else {
+  //           console.log('Error retrieving address:', response.data.status);
+  //         }
+  //       } catch (error) {
+  //         console.log('Error fetching address:', error);
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log('Error getting current location:', error);
+  //       // Handle location fetch error here
+  //     },
+  //     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+  //   );
+  // };
+
+  useEffect(() => {
+    // Check and request location permission for Android
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      ).then((granted) => {
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // If permission granted, get user's location
+          getCurrentLocation();
+        }
+      });
+    } else {
+      // For iOS, no need to request location permission
+      getCurrentLocation();
+    }
+  }, []);
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation({ latitude, longitude });
+        getReverseGeocode(latitude, longitude);
+      },
+      (error) => console.log('Error getting location: ', error),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+  };
+
+  const getReverseGeocode = async (latitude, longitude) => {
+    try {
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+      if (response && response.data) {
+        const {
+          house_number,
+          road,
+          city,
+          country,
+          postcode,
+        } = response.data.address;
+        setAddress({
+          houseNumber: house_number,
+          streetNumber: road,
+          city: city,
+          country: country,
+          postalCode: postcode,
+        });
+      }
+    } catch (error) {
+      console.log('Error getting address: ', error);
+    }
+  };
+  const formattedAddress = address
+    ? `${address.houseNumber? address.houseNumber: ''}, ${address.streetNumber}, ${address.city}, ${address.country}, ${address.postalCode}`
+    : 'Loading...';
+
+    const handlePay = async()=>{
+      const data = await axios.put(`https://customdemowebsites.com/dbapi/paUsers/${user.id}`,{
+        f_name: user.firstName,
+        l_name:user.lastName,
+        phone_no: phone,
+        email:user.email,
+        address: formattedAddress,
+        gender:user.gender
+      })
+      console.log(data.data)
+        navigation.navigate("AmountPayment", {
+          item: item,
+          selectedDate: selectedDate, // Pass the selectedDate
+          selectedTime: selectedTime,
+          visitId: visitId // Pass the selectedTime
+        })
+    }
   return (
     <View  style={{flex: 1, backgroundColor:"#fff"}} >
       <MyStatusBar backgroundColor="transparents"/>
@@ -398,7 +522,7 @@ const DoctorDetail = ({route}) => {
         />
         <View style={{gap: 5}}>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
-            <Text style={{color: '#172331',fontFamily:"Raleway-Bold"}}> Dr {data.f_name} </Text>
+            <Text style={{color: '#172331',fontFamily:"Raleway-Bold"}}> Dr {item.f_name} </Text>
             <Verified/>
           </View>
           <View style={{flexDirection: 'row', gap: 5, alignItems: 'center'}}>
@@ -408,7 +532,7 @@ const DoctorDetail = ({route}) => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              {data.profession}
+              {item.profession} 
             </Text>
             <View style={styles.dotCircle} />
             <Text
@@ -417,7 +541,7 @@ const DoctorDetail = ({route}) => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              {data.experience}
+              {item.experience}
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
@@ -429,7 +553,7 @@ const DoctorDetail = ({route}) => {
                   fontFamily: 'Raleway-SemiBold',
                   fontSize: 12,
                 }}>
-                4.1
+                {item.review_count}
               </Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
@@ -440,7 +564,7 @@ const DoctorDetail = ({route}) => {
                   fontFamily: 'Raleway-SemiBold',
                   fontSize: 12,
                 }}>
-                {data.address}
+                {item.hospital}
               </Text>
             </View>
           </View>
@@ -466,7 +590,7 @@ const DoctorDetail = ({route}) => {
                 fontFamily: 'Raleway-SemiBold',
                 fontSize: 14,
               }}>
-              Fri, 10 Mar 11:00 AM
+              {formattedDate} {selectedTime}
             </Text>
           </View>
         </View>
@@ -484,7 +608,7 @@ const DoctorDetail = ({route}) => {
               }}>
               Patient Address
             </Text>
-            <Text
+            {/* <Text
               style={{
                 color: '#172331',
                 fontFamily: 'Raleway-Medium',
@@ -492,7 +616,20 @@ const DoctorDetail = ({route}) => {
                 width: '70%',
               }}>
               C-12/74, Khirki Ext. Malviya nagar New Delhi, 110017
-            </Text>
+            </Text> */}
+            {address ? (
+          <Text
+            style={{
+              color: '#172331',
+              fontFamily: 'Raleway-Medium',
+              fontSize: 14,
+              width: '70%',
+            }}>
+            {formattedAddress}
+          </Text>
+        ) : (
+          <Text>Loading...</Text>
+        )}
           </View>
           <Divider />
         </View>
@@ -578,7 +715,7 @@ const DoctorDetail = ({route}) => {
               color: '#172331',
               fontFamily: 'Raleway-Medium',
               fontSize: 12,
-            }}>₹{data.fee}</Text>
+            }}>₹{item.fee}</Text>
         </View>
         <View style={{flexDirection:"row", justifyContent:"space-between"}}>
           <Text style={{
@@ -604,19 +741,17 @@ const DoctorDetail = ({route}) => {
               color: '#172331',
               fontFamily: 'Raleway-Bold',
               fontSize: 14,
-            }}>₹{data.fee}</Text>
+            }}>₹{item.fee}</Text>
         </View>
       </View>
       </View>
       <View style={{marginTop: 30, width:"100%" }} >
-        <TouchableOpacity onPress={()=>{
-          navigation.navigate("AmountPayment")
-        }} >
+        <TouchableOpacity onPress={handlePay} >
           <View style={styles.button}>
-            <Text style={{fontSize:16, color:"#fff", fontFamily:"PlusJakartaSans-Bold"}}>Pay ₹1000</Text>
+            <Text style={{fontSize:16, color:"#fff", fontFamily:"PlusJakartaSans-Bold"}}>Pay ₹{item.fee}</Text>
           </View>
         </TouchableOpacity>
-      </View>
+      </View> 
       </View>
     </View>
   );

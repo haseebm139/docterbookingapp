@@ -120,7 +120,7 @@ const HomePage = () => {
             <Text style={styles.heading}>Find your specialist</Text>
             <View >
             {/* {renderLabel()} */}
-            <Dropdown
+            {/* <Dropdown
               style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
@@ -140,7 +140,7 @@ const HomePage = () => {
                 setValue(item.value);
                 setIsFocus(false);
               }}
-            />
+            /> */}
           </View>
           </View>
 

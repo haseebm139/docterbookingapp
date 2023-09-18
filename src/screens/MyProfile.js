@@ -11,8 +11,7 @@ import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setFirstName, setId } from './Redux/Reducer/CreateAccount/CustomerAccount';
-import { setLastName } from './Redux/Reducer/CreateAccount/DoctorAccount';
+import { setFirstName, setId, setLastName } from './Redux/Reducer/CreateAccount/CustomerAccount';
 
 
 const MyProfile = () => {

@@ -453,6 +453,7 @@ import { useNavigation } from '@react-navigation/native';
 import DatePicker from 'react-native-datepicker';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { DateTimePicker } from 'react-native-paper-dates';
 // import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -595,11 +596,12 @@ const AddAvailability = () => {
           date={selectedWeek}
           mode="date"
           placeholder="Select Week"
-          format="DD-MM-YYYY"
+          format="YYYY-MM-DD"
           minDate="01-01-2020"
           maxDate="31-12-2030"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
+          showIcon={false} 
           customStyles={{
             dateInput: {
               borderWidth: 0,
@@ -635,7 +637,7 @@ const AddAvailability = () => {
             <View>
               {data.timings.map((timing, index) => (
                 <View key={index} style={styles.timingContainer}>
-                  <TextInput
+                  {/* <TextInput
                     mode="outlined"
                     label="From"
                     placeholder="09:00am"
@@ -649,8 +651,36 @@ const AddAvailability = () => {
                         background: "#fff"
                       }
                     }}
-                  />
-                  <TextInput
+                  /> */}
+                  <DatePicker
+              style={{ width: 170 }}
+              date={timing.from}
+              mode="time"
+              placeholder="From"
+              format="hh:mm A"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              showIcon={false} 
+              onDateChange={time =>
+                handleTimingChange(day, index, 'from', time)
+                // console.log(time)
+              }
+            />
+             <DatePicker
+              style={{ width: 170 }}
+              date={timing.to}
+              mode="time"
+              placeholder="From"
+              format="hh:mm A"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              showIcon={false} 
+              onDateChange={time =>
+                handleTimingChange(day, index, 'to', time)
+                // console.log(time)
+              }
+            />
+                  {/* <TextInput
                     mode="outlined"
                     label="To"
                     placeholder="05:00pm"
@@ -664,12 +694,12 @@ const AddAvailability = () => {
                         background: "#fff"
                       }
                     }}
-                  />
+                  /> */}
                   {index === data.timings.length - 1 && (
-                    <CustomButtom text="+" onPress={() => handleAddTiming(day)} />
+                    <CustomButtom title="+" onPress={() => handleAddTiming(day)} />
                   )}
                   {index !== data.timings.length - 1 && (
-                    <CustomButtom text="-" onPress={() => handleRemoveTiming(day, index)} />
+                    <CustomButtom title="-" onPress={() => handleRemoveTiming(day, index)} />
                   )}
                 </View>
               ))}

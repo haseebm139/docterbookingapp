@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import CircleTick from '../assets/assets/check_circle.svg'
 import CalendarIcon from '../assets/assets/appointment.svg';
 import Verified from '../assets/assets/doctorverified.svg'
@@ -8,11 +8,36 @@ import { useNavigation } from '@react-navigation/native';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../components/Statusbar';
 import Backbtn from '../assets/assets/icon-button.svg'
+import { parse, format } from 'date-fns';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 
 
-const BookingDone = () => {
+const BookingDone = ({route}) => {
+  const { item, selectedDate, selectedTime,visitId} = route.params;
+  const user = useSelector((state)=> state.customerAccount)
+  console.log(user.visitId)
+  const parsedDate = parse(selectedDate, 'yyyy-MM-dd', new Date());
+  
+
+  // // Format the date to "Fri, 10 Mar" format
+  const formattedDate = format(parsedDate, 'E, d MMM');
+  // console.log(formattedDate)
+//  console.log(item)
   const navigation = useNavigation()
+
+  const handleDone = async()=>{
+    
+    const data = await axios.put(`https://customdemowebsites.com/dbapi/visits/status/${visitId}`,{
+     is_pending: 0,
+     is_done:1,
+     is_rejected: 0
+    })
+    Alert.alert("Booking has been done")
+    navigation.navigate("HomePage");
+    console.log(data.status)
+  }
   return (
    <View style={styles.container}>
     <View>
@@ -56,7 +81,7 @@ const BookingDone = () => {
                 fontFamily: 'Raleway-SemiBold',
                 fontSize: 14,
               }}>
-              Fri, 10 Mar 11:00 AM
+             {formattedDate} {selectedTime}
             </Text>
           </View>
         </View>
@@ -92,7 +117,7 @@ const BookingDone = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              Physiotherapist
+              {item.profession}
             </Text>
             <View style={styles.dotCircle} />
             <Text
@@ -101,7 +126,7 @@ const BookingDone = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              24 yrs exp
+              {item.experience}
             </Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
@@ -113,7 +138,7 @@ const BookingDone = () => {
                   fontFamily: 'Raleway-SemiBold',
                   fontSize: 12,
                 }}>
-                4.1
+                {item.review_count}
               </Text>
             </View>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
@@ -124,7 +149,7 @@ const BookingDone = () => {
                   fontFamily: 'Raleway-SemiBold',
                   fontSize: 12,
                 }}>
-                Patparganj
+                {item.hospital}
               </Text>
             </View>
           </View>
@@ -135,7 +160,7 @@ const BookingDone = () => {
         <Text style={styles.textsmbold}>Payment info</Text>
         <View style={styles.flexRow}>
             <Text style={styles.textsm}>Price</Text>
-            <Text style={styles.textsm}>₹1000</Text>
+            <Text style={styles.textsm}>₹{item.fee}</Text>
         </View>
         <View style={styles.flexRow}>
             <Text style={styles.textsm}>Tax</Text>
@@ -147,14 +172,12 @@ const BookingDone = () => {
         </View>
         <View style={[styles.flexRow, {marginTop: 10}]}>
             <Text style={styles.textsmbold}>Payment Total</Text>
-            <Text style={styles.textsmbold}>₹1000</Text>
+            <Text style={styles.textsmbold}>₹{item.fee}</Text>
         </View>
       </View>
       </View>
       <View style={{marginTop: 30, width:"100%" }} >
-        <TouchableOpacity onPress={() => {
-        navigation.navigate("HomePage");
-      }}>
+        <TouchableOpacity onPress={handleDone}>
           <View style={styles.button}>
             <Text style={{fontSize:16, color:"#fff", fontFamily:"PlusJakartaSans-Bold"}}>Done</Text>
           </View>

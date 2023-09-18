@@ -40,6 +40,7 @@ import {
   setEmail as Email, 
   setgender as gen } from '../../Redux/Reducer/CreateAccount/DoctorAccount'
 import { Spinner } from '../../../components/Spinner';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const ProgressBarWithGap = ({totalSteps, currentStep}) => {
   return (
@@ -70,18 +71,25 @@ const DoctorAccount = () => {
   const [address, setAddress] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [hospitalBranches, setHospitalBranches] = useState([]);
   const navigation = useNavigation();
   const phone = useSelector((State) => State.phone)
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true);
   const user = useSelector((state)=> state.doctorAccount)
   console.log(phone)
+  console.log(selectedLocation)
 
   const handleImageUpload = () => {
-    launchImageLibrary({mediaType: 'photo'}, response => {
-      if (!response.didCancel && !response.errorCode) {
-        setAvatar(response.uri);
+    let options = {
+      storageOptions:{
+        path: 'image'
       }
+    }
+    launchImageLibrary({ mediaType: 'photo' }, response => {
+      console.log(response.assets[0].uri)
+        setAvatar(response.assets[0].uri);   
     });
   };
   // useEffect(()=>{
@@ -112,7 +120,7 @@ const DoctorAccount = () => {
     async function fetchData() {
       if (!user.id) {
         try {
-          const response = await axios.post("https://customdemowebsites.com/dbapi/drUsers/detail", {
+          const response = await axios.post("https://customdemowebsites.com/dbapi/drUsers/auth", {
             phone_no: phone,
           });
 
@@ -157,9 +165,17 @@ const DoctorAccount = () => {
       const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/add",{
         f_name: firstName,
         l_name: lastName,
+        image: avatar,
         phone_no: phone,
         email: email,
-        address: address,
+        branches: [
+          {
+            name: hospital,
+            address: selectedLocation.address,
+            lat: selectedLocation.latitude,
+            lng: selectedLocation.longitude
+          }
+        ],
         gender: gender,
         profession: value,
         hospital:hospital,
@@ -222,6 +238,13 @@ const DoctorAccount = () => {
    
     navigation.goBack('DoctorHomePage');
   };
+  const addHospitalBranch = (name, address, latitude, longitude) => {
+    setHospitalBranches(prevBranches => [
+      ...prevBranches,
+      { name, address, latitude, longitude },
+    ]);
+  };
+
 
   return (
     <>
@@ -253,10 +276,7 @@ const DoctorAccount = () => {
               style={styles.avatarContainer}
               onPress={handleImageUpload}>
               <View onPress={handleCameraUpload}>
-                <Avatar.Image
-                  size={72}
-                  source={require('../../../assets/assets/avatar.png')}
-                />
+              <Avatar.Image size={72} source={avatar ? {uri:avatar} : require("../../../assets/assets/avatar.png")}/>
                 <Image
                   style={{position: 'absolute', bottom: 2, right: 0}}
                   source={require('../../../assets/assets/cameraIcon.png')}
@@ -392,6 +412,7 @@ const DoctorAccount = () => {
                 keyboardType="default"
               />
             </View>
+            
             <View>
               <Text style={styles.inputLabel}>Experience (yrs)</Text>
               <InputField
@@ -412,14 +433,64 @@ const DoctorAccount = () => {
             </View>
             <View>
               <Text style={styles.inputLabel}>My Address</Text>
-              <InputField
+              {/* <InputField
                 placeholder="Address"
                 value={address}
                 handleChange={text => setAddress(text)}
                 keyboardType="default"
                 image={<Location />}
-              />
+              /> */}
+              <ScrollView>
+                    <GooglePlacesAutocomplete
+                    GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                    fetchDetails={true}
+                        placeholder='Search destination'
+                        onPress={(data, details = null) => {
+                          // 'data' contains information about the selected place
+                          // 'details' contains detailed information about the selected place
+                          if (details) {
+                            setSelectedLocation({
+                              address: data.description,
+                              latitude: details.geometry.location.lat,
+                              longitude: details.geometry.location.lng,
+                            });
+                          }
+                          // console.log('Autocomplete Data:', data);
+                          // console.log('Place Details:', details);
+                          // console.log(JSON.stringify(details?.geometry?.location));
+                        }}
+                        query={{
+                            key: "AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY",
+                            language: 'en',
+                        }}
+
+
+                    />
+                    {/* <View style={{ padding: 20 }}>
+        <Text>Doctor Account</Text>
+        <GooglePlacesAutocomplete
+          GooglePlacesDetailsQuery={{ fields: 'geometry,formatted_address' }}
+          fetchDetails={true}
+          placeholder='Search for a hospital branch'
+          onPress={(data, details = null) => {
+            if (details) {
+              addHospitalBranch(data.structured_formatting.main_text, details.formatted_address, details.geometry.location.lat, details.geometry.location.lng);
+              setSelectedLocation(null); // Reset selected location when adding a new branch
+            }
+            console.log('Autocomplete Data:', data);
+                          console.log('Place Details:', details);
+                          console.log(JSON.stringify(details?.geometry?.location));
+          }}
+          query={{
+            key: 'AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY',
+            language: 'en',
+          }}
+        />
+        
+      </View> */}
+                </ScrollView>
             </View>
+            
           </View>
         )}
       </View>

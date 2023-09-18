@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import ArrowIcon from '../../../assets/assets/arrow_back_ios.svg'
-import VerifiedIcon from '../../../assets/assets/verifiedIcon.svg'
-import MessageIcon from '../../../assets/assets/message-question.svg'
-import CalenderIcon from '../../../assets/assets/calendarprofile.svg'
-import MoneyIcon from '../../../assets/assets/moneys.svg'
-import NotifyIcon from '../../../assets/assets/notification-status.svg'
-import ReviewsIcon from '../../../assets/assets/profilestar.svg'
-import Logout from '../../../assets/assets/logout.svg'
+import ArrowIcon from '../../../assets/assets/arrow_back_ios.svg';
+import VerifiedIcon from '../../../assets/assets/verifiedIcon.svg';
+import MessageIcon from '../../../assets/assets/message-question.svg';
+import CalenderIcon from '../../../assets/assets/calendarprofile.svg';
+import MoneyIcon from '../../../assets/assets/moneys.svg';
+import NotifyIcon from '../../../assets/assets/notification-status.svg';
+import ReviewsIcon from '../../../assets/assets/profilestar.svg';
+import Logout from '../../../assets/assets/logout.svg';
 import { Avatar, Divider } from 'react-native-paper';
 import MyStatusBar from '../../../components/Statusbar';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';

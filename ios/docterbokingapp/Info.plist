@@ -47,7 +47,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+<string>Your location is needed to provide location-based services.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Your location is needed to provide location-based services.</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Your location is needed to provide location-based services.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Foundation.ttf</string>

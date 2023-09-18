@@ -15,6 +15,16 @@ import MyStatusBar from '../../components/Statusbar';
 
 
 const Notification = () => {
+  const currentDate = new Date();
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const formattedDate = `Today, ${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+  
+  console.log(formattedDate);
  const navigation = useNavigation();
   return (
     <>
@@ -23,9 +33,9 @@ const Notification = () => {
        <Text style={styles.head}>Notification</Text>
 
        <View style={styles.bottomborder}>
-        <Text style={styles.textsm}>Today, March 25, 2022</Text>
+        <Text style={styles.textsm}>{formattedDate}</Text>
        </View>
-      <View >
+      {/* <View >
         <View style={styles.cardContainer}>
             <CreditCard/>
             <View>
@@ -75,7 +85,8 @@ Stay with app and take care.</Text>
             </View>
         </View>
         
-        </View>
+        </View> */}
+        <Text>No Notification Found</Text>
         </View>
     </>
   );

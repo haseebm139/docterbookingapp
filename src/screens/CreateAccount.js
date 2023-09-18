@@ -19,7 +19,7 @@ import {
 } from './Redux/Reducer/CreateAccount/CustomerAccount';
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
-import { setId } from './Redux/Reducer/CreateAccount/DoctorAccount';
+import { setId } from './Redux/Reducer/CreateAccount/CustomerAccount';
 
 const AccountScreen = ({route}) => {
   const [avatar, setAvatar] = useState(null);
@@ -63,11 +63,12 @@ useEffect(()=>{
       phone_no: phone,
     }).then((response)=>{
         console.log(response.data)
+        dispatch(setId(response.data.id))
       dispatch(firstname(response.data.f_name))
       dispatch(lastname(response.data.l_name))
       dispatch(Email(response.data.email))
       dispatch(Gender(response.data.gender))
-      navigation.navigate("HomePage")
+      // navigation.navigate("HomePage")
       
       
     }).catch(err => console.log(err))
@@ -126,9 +127,7 @@ useEffect(()=>{
     <>
     {user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
         <>{navigation.reset({ index: 0, routes: [{ name: 'HomePage' }] })}</>
-      ) : loading ? ( // Render a loading spinner or some placeholder content until loading is complete
-        <Spinner />
-      ) : (
+      ) : loading ? <Spinner/> : (
    
     <KeyboardAvoidingView behavior='padding' style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
       <View  style={styles.container}>

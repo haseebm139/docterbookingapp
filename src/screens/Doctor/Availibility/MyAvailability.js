@@ -236,14 +236,17 @@ const MyAvailability = () => {
   useEffect(() => {
     // Get the current date and format it to 'dd-mm-yyyy' format
     const currentDate = new Date();
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const year = currentDate.getFullYear();
-    const formattedDate = `${day}-${month}-${year}`;
+const year = currentDate.getFullYear();
+const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+const day = currentDate.getDate().toString().padStart(2, '0');
+
+const formattedDate = `${year}-${month}-${day}`;
+// console.log(formattedDate);
 
     setSelectedDate(formattedDate); // Set the current date as the initial selected date
   }, []);
   const handleDateChange = (date) => {
+    console.log(date)
     setSelectedDate(date);
   };
   

@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  FlatList
+  FlatList,
+  Linking
 } from 'react-native';
 // import {FlatList} from 'react-native-gesture-handler';
 // import ClockImg from '../../../assets/assets/pace.svg';
@@ -23,8 +24,6 @@ import ClockImg from '../../../assets/assets/pace.svg';
 import PhoneIcon from '../../../assets/assets/phoneicon.svg';
 import Location from '../../../assets/assets/location.svg';
 // import PencilIcon from '../../../assets/assets/border_color.svg';
-// import { Avatar, Divider } from 'react-native-paper';
-
 const TotalVisits = () => {
   const [status, setStatus] = useState('Upcoming');
   const [dataList, setDataList] = useState([]);
@@ -33,6 +32,7 @@ const TotalVisits = () => {
   // const {upcoming_visits} = useSelector(state => state.doctorDetail.userDetails)
   const user = useSelector(state => state.doctorAccount)
   console.log(user)
+  const Navigation = useNavigation()
 
   const navigation = useNavigation()
   const ListTab = [
@@ -104,9 +104,19 @@ const TotalVisits = () => {
           `https://customdemowebsites.com/dbapi/visits/dr/${user.id}`
         );
         console.log(response.data)
+        const currentDate = new Date();
         const data = response.data;
-        const upcomingData = data.filter((item) => item.is_pending === 1);
-        const pastData = data.filter((item) => item.is_done === 1);
+        const upcomingData = data.filter((item) => {
+          const visitDate = new Date(item.start_date_time);
+          return item.is_pending === 1 && visitDate > currentDate;
+        });
+        
+        const pastData = data.filter((item) => {
+          const visitDate = new Date(item.start_date_time);
+          return item.is_done === 1 && visitDate < currentDate;
+        });
+        // const upcomingData = data.filter((item) => item.is_pending === 1);
+        // const pastData = data.filter((item) => item.is_done === 1);
         setDataList(upcomingData);
         // Save the filtered data in the "Upcoming" and "Past" tabs
         setUpcomingData(upcomingData);
@@ -121,6 +131,23 @@ const TotalVisits = () => {
 
   console.log(upcomingData)
 const renderItems = ({item, index})=>{
+  const detailData = JSON.parse(item.detail);
+  const inputDateString = item.start_date_time;
+const inputDate = new Date(inputDateString);
+
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const months = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+const dayOfWeek = daysOfWeek[inputDate.getDay()];
+const dayOfMonth = inputDate.getDate();
+const month = months[inputDate.getMonth()];
+
+const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
+
+console.log(formattedDate);
   console.log(item)
   return (
     <View style={styles.appointContainer}>
@@ -141,7 +168,7 @@ const renderItems = ({item, index})=>{
             marginVertical: responsiveScreenHeight(1)
           }}>
           <ClockImg />
-          <Text style={styles.h1}>Fri, 20 Mar  |  07:00 - 07:30 PM</Text>
+          <Text style={styles.h1}>{formattedDate} |  {detailData.from}- {detailData.to}</Text>
           
         </View>
         <View
@@ -156,18 +183,25 @@ const renderItems = ({item, index})=>{
           
         </View>
       </View>
-       <PhoneIcon />
+      <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
+            <PhoneIcon />
+          </TouchableOpacity>
       
     </View>
     <Divider />
+    <View style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
     <View style={{marginTop: responsiveScreenHeight(1), flexDirection:"row", gap: 10, alignItems:"center"}}>
     <Avatar.Image
         size={responsiveScreenWidth(6)}
         source={require('../../../assets/assets/doctorimg.png')}
       />
-      <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails")}>
-        <Text style={styles.name}>Mehtab Alam</Text>
+      <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails", {item})}>
+        <Text style={styles.name}>{item.f_name}</Text>
         </TouchableOpacity>
+    </View>
+    <View>
+      <Text>Visit # {item.visit_id}</Text>
+    </View>
     </View>
 </View>
   )
@@ -191,7 +225,7 @@ const renderItems = ({item, index})=>{
                 status === e.status && styles.tabActiveText,
               ]}>{e.status}</Text>
               <View style={[styles.totalvisits, status === e.status && styles.totolvisitsActive]}>
-                <Text style={{color:"#fff", fontWeight: 600}}>4</Text></View>
+                <Text style={{color:"#fff", fontWeight: 600}}>{e.status === "Upcoming" ? upcomingData.length : pastData.length}</Text></View>
             </View>
           </TouchableOpacity>
         ))}
@@ -228,7 +262,7 @@ const renderItems = ({item, index})=>{
         ))}
       </View> */}
 
-{status === 'Upcoming' && (
+{/* {status === 'Upcoming' && (
         <FlatList
           data={upcomingData}
           renderItem={renderItems}
@@ -244,8 +278,40 @@ const renderItems = ({item, index})=>{
           )}
           keyExtractor={(item) => item.id.toString()}
         />
-      )}
+      )} */}
 
+
+
+<View style={styles.flatListContainer}>
+        {status === 'Upcoming' && (
+          <View>
+            {upcomingData.length > 0 ? (
+              <FlatList
+                data={upcomingData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItems}
+                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+              />
+            ) : (
+              <Text style={styles.noDataText}>No data found</Text>
+            )}
+          </View>
+        )}
+        {status === 'Past' && (
+          <View >
+            {pastData.length > 0 ? (
+              <FlatList
+                data={pastData}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItems}
+                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+              />
+            ) : (
+              <Text style={styles.noDataText}>No data found</Text>
+            )}
+          </View>
+        )}
+      </View>
 
 
     </View>
@@ -472,9 +538,8 @@ h2: {
   },
 });
 
+
 export default TotalVisits;
-
-
 const Tag = ({ label, color }) => {
     const tagStyles = [styles.tag, color === 'danger' && styles.danger, color === 'warning' && styles.warning, color === 'success' && styles.success];
     const labelStyles = [styles.label, label === 'cancelled' && styles.labeldanger,  label === 'Completed' && styles.labelsuccess];

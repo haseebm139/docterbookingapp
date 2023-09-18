@@ -249,10 +249,10 @@ const DoctorHomePage = () => {
         reviews={`${userData.review_count} reviews added`}
         />
       </View>
-      {/* {userData && userData.upcoming_visits.length > 0 ?
+      { userData.upcoming_visits ?
      <View>
       <View style={styles.my}>
-        <Text style={styles.textsm}>Upcoming visit (3)</Text>
+        <Text style={styles.textsm}>Upcoming visit ({userData.upcoming_visits.length})</Text>
         <View style={{flexDirection:"row", gap: 5, alignItems:"center"}}>
             <Text style={styles.textsmsemi}>View All</Text>
         <ArrowRightIcon/>
@@ -265,9 +265,28 @@ const DoctorHomePage = () => {
         activeDot={<CustomDot active />}
         paginationStyle={styles.pagination}
       >
-   <Visits/>
-   <Visits/>
-   <Visits/>
+        {userData.upcoming_visits.map((item)=>{
+            const detailData = JSON.parse(item.detail);
+            const inputDateString = item.start_date_time;
+          const inputDate = new Date(inputDateString);
+          
+          const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          const months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          ];
+          
+          const dayOfWeek = daysOfWeek[inputDate.getDay()];
+          const dayOfMonth = inputDate.getDate();
+          const month = months[inputDate.getMonth()];
+          
+          const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
+          
+          console.log(item);
+          return(
+            <Visits formattedDate={formattedDate} detailData={detailData}/>
+          )
+        })}
    </Swiper>
    </View>
    </View>
@@ -275,7 +294,7 @@ const DoctorHomePage = () => {
    <View style={[styles.my,{marginBottom: 20, alignItems: "center"}]}>
    <Text>No result found</Text>
    </View> 
-   } */}
+   }
    
   
 

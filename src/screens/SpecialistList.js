@@ -382,9 +382,9 @@ const Specialist = ({ route }) => {
                            <Text style={{fontFamily:"Raleway-Bold", fontSize: 14, color:"#172331" }}>{item.fee}</Text>
                            <Text style={{fontFamily:"Raleway-Medium", fontSize: 12, color:"#172331"}}>Consultation Fees</Text>
                        </View>
-                       <View style={{backgroundColor:"#4464D9",  borderRadius: 38, width:155, height: 40, alignItems: 'center', justifyContent: 'center'}}>
+                       <TouchableOpacity onPress={()=>{navigation.navigate("DoctorBooking", {item})}} style={{backgroundColor:"#4464D9",  borderRadius: 38, width:155, height: 40, alignItems: 'center', justifyContent: 'center'}}>
                            <Text style={{fontFamily:"Raleway-SemiBold", color:"#fff"}}>Book</Text>
-                       </View>
+                       </TouchableOpacity>
                    </View>
                    </View>
         ))}
