@@ -284,15 +284,17 @@ const MobileAuthentication = ({route}) => {
   const handlePress= ()=>{
     navigation.goBack();
   }
+  
  const onPress = async ()=>{
   
   try{
-  const confirmation = await auth().signInWithPhoneNumber("+923222001221");
+  const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+  
     setConfirm(confirmation);
     console.log("confirm",confirmation)
     console.log("working")
   }catch(err){
-    console.log("err", err)
+    console.log("err" , err)
   }
   // const phoneFormatRegex = phoneFormatsByCountry[countryCode];
   //   if (!phoneFormatRegex.test(phoneNumber)) {

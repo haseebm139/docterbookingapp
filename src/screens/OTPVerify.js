@@ -19,12 +19,12 @@ import {
 } from 'react-native-responsive-dimensions';
 import { useSelector } from 'react-redux';
 
-const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
+const OTPScreen = ({role, handleResendOTP,setConfirm, submitOTP}) => {
   // console.log(route)
   const navigation = useNavigation();
 
   const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(30);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const inputRefs = useRef([]);
   const phone = useSelector(State => State.phone)
@@ -36,6 +36,7 @@ const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
             setTimer((prevTimer) => prevTimer - 1);
           } else {
             setIsTimerRunning(false);
+            setConfirm(null)
           }
         }, 1000);
     
@@ -62,7 +63,7 @@ const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
   };
 
   const handleResetTimer = () => {
-    setTimer(60);
+    setTimer(30);
     setIsTimerRunning(true);
   };
   // const {role} = route.params
