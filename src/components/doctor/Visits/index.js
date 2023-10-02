@@ -8,8 +8,8 @@ import { Avatar, Divider } from 'react-native-paper';
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 
-const Visits = ({formattedDate, detailData}) => {
-  console.log(formattedDate, detailData)
+const Visits = ({formattedDate, detailData, item}) => {
+  console.log(formattedDate, detailData, item)
   
   // const {detail} = item
   const Navigation = useNavigation()
@@ -43,7 +43,7 @@ const Visits = ({formattedDate, detailData}) => {
                 marginBottom: responsiveScreenHeight(2)
               }}>
               <Location />
-              <Text style={styles.h2}>2715 Ash Dr. San Jose, South Dakota 83475</Text>
+              <Text style={styles.h2}>{item.address}</Text>
               
             </View>
           </View>
@@ -57,7 +57,7 @@ const Visits = ({formattedDate, detailData}) => {
             source={require('../../../assets/assets/doctorimg.png')}
           />
           <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails")}>
-            <Text style={styles.name}>Mehtab Alam</Text>
+            <Text style={styles.name}>{item.f_name} {item.l_name}</Text>
             </TouchableOpacity>
         </View>
     </View>

@@ -47,11 +47,11 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-<string>Your location is needed to provide location-based services.</string>
-<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-<string>Your location is needed to provide location-based services.</string>
-<key>NSLocationAlwaysUsageDescription</key>
-<string>Your location is needed to provide location-based services.</string>
+	<string>Your location is needed to provide location-based services.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is needed to provide location-based services.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is needed to provide location-based services.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Foundation.ttf</string>
@@ -77,7 +77,7 @@
 		<string>armv7</string>
 	</array>
 	<key>UIStatusBarStyle</key>
-	<string></string>
+	<string/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

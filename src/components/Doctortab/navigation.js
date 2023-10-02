@@ -22,10 +22,13 @@ import TotalVisits from '../../screens/Doctor/Visits';
 import DoctorHomePage from '../../screens/Doctor/HomePage';
 import DoctorProfile from '../../screens/Doctor/Profile';
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { Avatar } from 'react-native-paper';
 
 const Tab = createBottomTabNavigator();
 const  DoctorTabNavigator = ()=> {
-
+  const doctordetails = useSelector(state => state.doctorAccount)
+  console.log(doctordetails)
+  const urlImage = `https://customdemowebsites.com/dbapi/${doctordetails.DoctorImage}`
   const navigation = useNavigation();
   return (
     <Tab.Navigator
@@ -93,7 +96,7 @@ const  DoctorTabNavigator = ()=> {
         tabBarIcon:({focused})=>(
             <View>
               <View style={ focused?styles.lineTransition : null}/>
-                <UserImg width={24}/>
+              <Avatar.Image size={24} source={urlImage ? {uri:urlImage} : ""}/>
             </View>
         )
       }}

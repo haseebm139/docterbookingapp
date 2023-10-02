@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../components/Statusbar';
 import Backbtn from '../assets/assets/icon-button.svg'
+import Waiting from '../assets/assets/waiting.svg'
 import { parse, format } from 'date-fns';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -15,9 +16,12 @@ import { useSelector } from 'react-redux';
 
 
 const BookingDone = ({route}) => {
-  const { item, selectedDate, selectedTime,visitId} = route.params;
+  const [visitId, setVisitId] = useState('');
+  const { item, selectedDate, selectedTime, selectedDay} = route.params;
+  console.log(item.fcm_token)
   const user = useSelector((state)=> state.customerAccount)
-  console.log(user.visitId)
+  const [visitid , setVisitid] = useState(null)
+  console.log(selectedDate)
   const parsedDate = parse(selectedDate, 'yyyy-MM-dd', new Date());
   
 
@@ -26,17 +30,75 @@ const BookingDone = ({route}) => {
   // console.log(formattedDate)
 //  console.log(item)
   const navigation = useNavigation()
+  console.log(selectedDate)
+  console.log(visitid)
 
+
+  const handleDoneButtonPress = async () => {
+    if (selectedDate && selectedTime) {
+      try {
+        // Prepare the visit data...
+        // Make the API call to add the visit...
+        const response = await axios.post(
+          'https://customdemowebsites.com/dbapi/visits/add',
+          {
+            dr_id: item.id, // Assuming "id" is the doctor ID received from the route.params
+            pa_id: user.id, // Assuming you have the patient ID, replace this with the actual patient ID
+            // visit_no: lastVisitNumber + 1, // Increment the last visit number by one
+            charges: item.fee, // Set the visit charges accordingly
+            date_time: selectedDate,
+            detail: {
+              day: selectedDay, // Set the full day name (e.g., "Tuesday")
+              from: selectedTime, // The selected start time (e.g., '12:00')
+              to: selectedTime, // The selected end time (e.g., '14:00') - You may want to set this separately if needed
+            },
+          },
+        );
+        console.log(response.data);
+        setVisitid(response.data.visit_id)
+
+        // Check if the visit was added successfully based on the HTTP status code
+        if (response.status === 201) {
+          const notificationMessage = `${user.id} ${user.firstName} requested for the Booking on ${selectedDate} at ${selectedTime} visit_No: ${response.data.visit_id}`;
+          const notificationResponse = await axios.post(
+            'https://customdemowebsites.com/dbapi/notifications/add',
+            {
+              dr_id: item.id,
+              event: 'Booking Confirmation',
+              detail: notificationMessage,
+              image: '<Waiting/>', // You can adjust this as needed
+            }
+          );
+          console.log('Notification response:', notificationResponse.data);
+          try {
+            const response = await axios.post('https://customdemowebsites.com/dbapi/notify/push-notification', {
+              fcm_token: item.fcm_token,
+              title:"Booking Confirmation",
+              body: notificationMessage,
+            }); 
+            console.log('Notification sent successfully:', response.data);
+          } catch (error) {
+            console.error('Error sending notification:', error);
+          }
+          // Visit added successfully, navigate to "DoctorDetail" page
+          setVisitId(response.data.id);
+          Alert.alert("Booking has been Created Please wait for the confirmation")
+          navigation.navigate("HomePage");
+          
+        }
+      } catch (err) {
+        // Handle any errors that occur during the API call
+        console.log(err);
+        // You can show a generic error message to the user here if needed
+      }
+    } else {
+      Alert.alert('Please Select date');
+    }
+  };
   const handleDone = async()=>{
+   
     
-    const data = await axios.put(`https://customdemowebsites.com/dbapi/visits/status/${visitId}`,{
-     is_pending: 0,
-     is_done:1,
-     is_rejected: 0
-    })
-    Alert.alert("Booking has been done")
-    navigation.navigate("HomePage");
-    console.log(data.status)
+        handleDoneButtonPress()
   }
   return (
    <View style={styles.container}>
@@ -98,14 +160,11 @@ const BookingDone = ({route}) => {
           alignItems: 'flex-start',
           marginTop: 20,
         }}>
-        <Avatar.Image
-          size={64}
-          source={require('../assets/assets/doctorimg.png')}
-        />
+       <Avatar.Image size={64} source={{uri:`https://customdemowebsites.com/dbapi/${item.img}`}} />
         <View style={{gap: 5}}>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
             <Text style={{color: '#172331', fontFamily: 'Raleway-Bold'}}>
-              Dr Rahul
+              Dr {item.f_name}
             </Text>
             {/* <Image source={require('../assets/assets/verified.png')} /> */}
             <Verified/>

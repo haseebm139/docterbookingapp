@@ -9,6 +9,7 @@ import StarFilled from '../../../assets/assets/starfill.svg'
 import StarEmpty from '../../../assets/assets/starempty.svg'
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { useToast } from 'react-native-paper-toast';
 
 const ReviewScreen = ({route}) => {
   const {item} = route.params
@@ -17,6 +18,7 @@ const ReviewScreen = ({route}) => {
   const [rating, setRating] = useState(4);
   const [inputHeight, setInputHeight] = useState(10);
   const [post, setPost] = useState('');
+  const toaster = useToast();
 console.log(post)
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
@@ -45,6 +47,10 @@ console.log(post)
         rating: rating,
        review: post
       })
+      if(data){
+        // toaster.show({ message: {data}, duration: 2000 })
+        navigation.navigate("HomePage")
+      }
       console.log(data.data)
   }
 

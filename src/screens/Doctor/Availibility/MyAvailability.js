@@ -211,10 +211,11 @@
 //       }
 // })
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React,  { useEffect, useState } from 'react'
 import BackBtn from '../../../assets/assets/icon-button.svg'
 import Calender from '../../../assets/assets/calendar_today.svg'
+import Chechbox from '../../../assets/assets/Checkbox.svg'
 import Header from '../../../components/Header'
 import { responsiveScreenHeight, responsiveScreenWidth, responsiveScreenFontSize } from 'react-native-responsive-dimensions'
 import { Divider, TextInput } from 'react-native-paper';
@@ -360,6 +361,7 @@ const formattedDate = `${year}-${month}-${day}`;
        const res =  await axios.put(`https://customdemowebsites.com/dbapi/availability/${avaId}`, availabilityDataToSend);
     console.log(res.data)
         // Show a success notification
+        Navigation.navigate("Availibility")
        
       } catch (error) {
         console.log(error);
@@ -370,132 +372,8 @@ const formattedDate = `${year}-${month}-${day}`;
     console.log(avaId)
 
   return (
-  //   <View style={styles.container}>
-  //     <MyStatusBar backgroundColor="transparent"/>
-  //     <View style={{flexDirection:"row"}}>
-  //     <Header
-  //         image={<BackBtn/>}
-  //         handlePress={()=> Navigation.goBack()}
-  //         />
-  //         <View style={ {textAlign:"center", alignSelf:"center", margin:"auto"}}>
-  //         <Text style={styles.h1}>My Availability</Text>
-  //         </View>
-  //         </View>
-
-  //         <View style={styles.my}>
-  //           <Text style={styles.header}>Update your preferred working week days and time</Text>
-  //         </View>
-  //         <View style={styles.my4}>
-  //         <TextInput
-  //     mode="outlined"
-  //     label="Week days"
-  //     placeholder="This Week"
-  //     theme={{ 
-  //       roundness: 12,
-  //       colors:{
-  //         primary: "#D8D5D3",
-  //         underlineColor: "#D9D5D3",
-  //         background:"#fff"
-  //       }
-  //      }}
-  //     right={<TextInput.Affix text="" />}
-  //   />
-  //   <Calender style={{position:"absolute", right: 10, top: 32}}/>
-  //         </View>
-  //         <View >
-  //           <View style={{flexDirection:"row", alignItems:"center", gap:5, justifyContent:"flex-start"}}>
-  //         <CheckBox
-  //         checked={false}
-  //         disabled
-  //         iconType='material-community'
-  //         checkedIcon="checkbox-outline"
-  //         uncheckedIcon={'checkbox-blank-outline'}
-  //         containerStyle={{ marginLeft: 0 , paddingLeft: 0}}  
-  //        />
-  // <Text style={styles.chechboxLabel}>Sunday</Text>
-  // </View>
-  // <Text style={styles.unavalable}>Unavailable</Text>
-  //         </View>
-  //         <Divider style={{marginTop: 10}}/>
-  //         <View >
-  //           <View style={{flexDirection:"row", alignItems:"center", gap:5, marginLeft:0}}>
-  //         <CheckBox
-  //   checked={toggleCheckBox}
-  //   onPress={handleCheck}
-  //   checkedColor='#4464D9'
-  //   iconType='material-community'
-  //   uncheckedIcon={'checkbox-blank-outline'}
-  //   checkedIcon="checkbox-marked"
-  //   containerStyle={{ marginLeft: 0 , paddingLeft: 0}}  
-  // />
-  // <Text style={styles.chechboxLabel}>Monday</Text>
-  // </View>
-  // <View style={[{flexDirection:"row", gap: 10, marginTop: responsiveScreenHeight(1.5), width:responsiveScreenWidth(60), flexWrap: 'wrap'}]}>
-  //   <View style={styles.timingcard}> 
-  //       <Text style={styles.timingcardTxt}>9:00am</Text>
-  //   </View>
-  //   <View style={styles.line}/>
-  //   <View style={styles.timingcard}>
-  //       <Text style={styles.timingcardTxt}>9:30am</Text>
-  //   </View>
-  //   <View style={styles.timingcard}> 
-  //       <Text style={styles.timingcardTxt}>9:00am</Text>
-  //   </View>
-  //   <View style={styles.line}/>
-  //   <View style={styles.timingcard}>
-  //       <Text style={styles.timingcardTxt}>9:30am</Text>
-  //   </View>
-  // </View>
-  //         </View>
-  //         <View style={styles.my4}>
-  //           <View style={{flexDirection:"row", alignItems:"center", gap:10}}>
-  //         <CheckBox
-  //  checkedColor='#4464D9'
-  //  iconType='material-community'
-  //  uncheckedIcon={'checkbox-blank-outline'}
-  //  checkedIcon="checkbox-marked"
-  //  containerStyle={{ marginLeft: 0 , paddingLeft: 0}}  
-  // />
-  // <Text style={styles.chechboxLabel}>Tuesday</Text>
-  // </View>
-  // <View style={[{flexDirection:"row", gap: 10, marginTop: responsiveScreenHeight(1.5), width:responsiveScreenWidth(60), flexWrap: 'wrap'}]}>
-  //   <View style={styles.timingcard}> 
-  //       <Text style={styles.timingcardTxt}>9:00am</Text>
-  //   </View>
-  //   <View style={styles.line}/>
-  //   <View style={styles.timingcard}>
-  //       <Text style={styles.timingcardTxt}>9:30am</Text>
-  //   </View>
-  //   <View style={styles.timingcard}> 
-  //       <Text style={styles.timingcardTxt}>9:00am</Text>
-  //   </View>
-  //   <View style={styles.line}/>
-  //   <View style={styles.timingcard}>
-  //       <Text style={styles.timingcardTxt}>9:30am</Text>
-  //   </View>
-  // </View>
-  //         </View>
-
-  //         <View
-  //         style={{
-  //           position:"absolute",
-  //           width: '100%',
-  //           borderRadius: 10,
-  //           justifyContent: 'center',
-  //           alignItems: 'center',
-  //           backgroundColor: '#4464D9',
-  //           // padding: 10,
-  //           height: responsiveScreenHeight(6.5),
-  //           left: 20,
-  //           bottom: responsiveScreenHeight(3)
-  //         }}>
-            
-  //           <Text style={{fontSize: responsiveScreenFontSize(2),
-  //   color: '#fff',
-  //   fontFamily: 'PlusJakartaSans-Bold',}}>Save my availability </Text>
-  //         </View>
-  //   </View>
-  <View style={styles.container}>
+<View style={{flex: 1}}>
+<ScrollView style={styles.container}>
     <MyStatusBar backgroundColor="transparent"/>
     <View style={{flexDirection:"row"}}>
        <Header
@@ -532,40 +410,15 @@ const formattedDate = `${year}-${month}-${day}`;
   {isLoading ? (
     <Text>Loading...</Text>
   ) : availabilityData.length > 0 ? (
-    availabilityData.map((item) => (
-      <View key={item.day}>
+    availabilityData.map((item, index) => (
+      <ScrollView>
+      <View key={index}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          <CheckBox
-            checkedColor="#4464D9"
-            iconType="material-community"
-            uncheckedIcon="checkbox-blank-outline"
-            checkedIcon="checkbox-marked"
-            containerStyle={{ marginLeft: 0, paddingLeft: 0 }}
-            checked={item.slots.length > 0} // Set checkbox checked status based on slots
-          />
+          <Chechbox/>
+          
           <Text style={styles.chechboxLabel}>{item.day}</Text>
         </View>
 
-        {/* {item.slots.length > 0 ? (
-          <View style={styles.slotContainer}>
-            {item.slots.map((slot, index) => (
-              <View style={[{flexDirection:"row", gap: 10, marginTop: responsiveScreenHeight(1.5), width:responsiveScreenWidth(60), flexWrap: 'wrap'}]}>
-              <View key={index} style={styles.timingcard}>
-                <Text style={styles.timingcardTxt}>
-                  From: {slot.from}
-                </Text>
-              </View>
-              <View key={index} style={styles.timingcard}>
-                <Text style={styles.timingcardTxt}>
-                  to: {slot.to}
-                </Text>
-              </View>
-              </View>
-            ))}
-          </View>
-        ) : (
-          <Text style={styles.unavailable}>Unavailable</Text>
-        )} */}
        <View style={styles.slotContainer}>
   {item.slots.map((slot, index) => (
     <View key={index} style={styles.slot}>
@@ -589,16 +442,18 @@ const formattedDate = `${year}-${month}-${day}`;
   ))}
 </View>
       </View>
+      </ScrollView>
     ))
   ) : (
     <Text>No availability data available</Text>
   )}
+  </ScrollView>
   {/* ... */}
   <TouchableOpacity
   onPress={handleSaveAvailability}
           style={{
             position:"absolute",
-            width: '100%',
+            width: responsiveScreenWidth(90),
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
@@ -606,14 +461,14 @@ const formattedDate = `${year}-${month}-${day}`;
             // padding: 10,
             height: responsiveScreenHeight(6.5),
             left: 20,
-            bottom: responsiveScreenHeight(3)
+            bottom: responsiveScreenHeight(0),
           }}>
             
             <Text style={{fontSize: responsiveScreenFontSize(2),
     color: '#fff',
     fontFamily: 'PlusJakartaSans-Bold',}}>Save my availability </Text>
           </TouchableOpacity>
-</View>
+          </View>
   )
 }
 
@@ -673,7 +528,7 @@ const styles = StyleSheet.create({
       timingcardTxt:{
         fontFamily:"Raleway-Medium",
         fontSize: 10,
-        color:"#172331"
+        color:"#172331",
       },
       line:{
         width: 5
@@ -682,6 +537,8 @@ const styles = StyleSheet.create({
         marginTop: responsiveScreenHeight(1.5),
         width: responsiveScreenWidth(60),
         flexWrap: 'wrap',
+        gap: 10,
+        marginBottom:responsiveScreenHeight(1.5)
       },
       slot: {
         flexDirection: 'row',
@@ -707,5 +564,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         textAlign: 'center',
         padding: 0,
+        width:responsiveScreenWidth(42),
       },
 }) 

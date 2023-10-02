@@ -14,19 +14,29 @@ import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFirstName, setId, setLastName } from '../../Redux/Reducer/CreateAccount/DoctorAccount';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const DoctorProfile = () => {
     const navigation = useNavigation()
     const doctordetails = useSelector(state => state.doctorAccount)
+    console.log(doctordetails)
+    const urlImage = `https://customdemowebsites.com/dbapi/${doctordetails.DoctorImage}`
     const phone = useSelector((State) => State.phone)
     const dispatch = useDispatch()
     console.log(doctordetails)
-    const handlePress = ()=>{
+    const handlePress = async ()=>{
+      try {
+        // Replace 'userData' with the key you use to store user data in AsyncStorage
+        await AsyncStorage.removeItem('id');
+        console.log('AsyncStorage cleared on logout');
+      } catch (error) {
+        console.error('Error clearing AsyncStorage on logout:', error);
+      }
       dispatch(setFirstName(''))
       dispatch(setId(''))
       dispatch(setLastName(''))
-       navigation.navigate("Intro")
+      navigation.reset({ index: 0, routes: [{ name: 'Intro' }] })
     }
   return (
     <View style={styles.container}>
@@ -36,7 +46,7 @@ const DoctorProfile = () => {
       </View>
       <View style={styles.profileDetail}>
       <View style={styles.sectionDone}>
-            <Avatar.Image source={(require("../../../assets/assets/avatar.png"))}/>
+      <Avatar.Image source={urlImage ? {uri:urlImage} : ''}/>
             <View >
                 <View style={{flexDirection:"row", gap: 2, alignItems:"center"}} >
                     <Text style={styles.textwhitelg}>{doctordetails.firstName} {doctordetails.lastName} </Text>

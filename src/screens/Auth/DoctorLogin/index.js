@@ -9,6 +9,8 @@ import {
   KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
+  Alert,
+  SectionList,
 } from 'react-native';
 import {Avatar, RadioButton} from 'react-native-paper';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -78,6 +80,7 @@ const DoctorAccount = () => {
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(true);
   const user = useSelector((state)=> state.doctorAccount)
+  
   console.log(phone)
   console.log(selectedLocation)
 
@@ -138,7 +141,8 @@ const DoctorAccount = () => {
             dispatch(add(response.data.address));
           }
         } catch (err) {
-          console.log(err);
+          console.log(err, "err");
+          
         }
       }
       setLoading(false);
@@ -146,6 +150,7 @@ const DoctorAccount = () => {
 
     fetchData();
   }, []);
+ 
 
   const handleCameraUpload = () => {
     launchCamera({mediaType: 'photo'}, response => {
@@ -157,37 +162,75 @@ const DoctorAccount = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 2;
 
+  
   const handleNext = async () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      // Submit form data
-      const data = await axios.post("https://customdemowebsites.com/dbapi/drUsers/add",{
-        f_name: firstName,
-        l_name: lastName,
-        image: avatar,
-        phone_no: phone,
-        email: email,
-        branches: [
+      // Create a new FormData object
+      const formData = new FormData();
+  
+      // Append your other data fields to the formData
+      formData.append('f_name', firstName);
+      formData.append('l_name', lastName);
+      formData.append('phone_no', phone);
+      formData.append('email', email);
+      formData.append('gender', gender);
+      formData.append('profession', value);
+      formData.append('hospital', hospital);
+      formData.append('experience', experience);
+      formData.append('fee', fee);
+  
+      // Append the image file to formData
+      if (avatar) {
+        const imageFile = {
+          uri: avatar,
+          name: 'avatar.jpg', // You can choose any file name here
+          type: 'image/jpeg', // Adjust the MIME type if needed
+        };
+        formData.append('image', imageFile);
+      }
+  
+      // Append the branches data
+      const branchData = {
+        name: hospital,
+        address: selectedLocation.address,
+        lat: selectedLocation.latitude,
+        lng: selectedLocation.longitude,
+      };
+      formData.append('branches', JSON.stringify([branchData]));
+  
+      try {
+        const response = await axios.post(
+          'https://customdemowebsites.com/dbapi/drUsers/add',
+          formData,
           {
-            name: hospital,
-            address: selectedLocation.address,
-            lat: selectedLocation.latitude,
-            lng: selectedLocation.longitude
+            headers: {
+              'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+            },
           }
-        ],
-        gender: gender,
-        profession: value,
-        hospital:hospital,
-        experience:experience,
-        fee:fee
-      }).then((response)=>{
-        console.log(response.data)
-      }).catch(err => console.log(err))
-      navigation.replace('DoctorHome');
+        );
+  
+        console.log(response.data);
+        dispatch(Id(response.data.id));
+        dispatch(fname(response.data.f_name));
+        dispatch(lname(response.data.l_name));
+        dispatch(Email(response.data.email));
+        dispatch(fees(response.data.fee));
+        dispatch(hosp(response.data.hospital));
+        dispatch(exp(response.data.experience));
+        dispatch(setProfession(response.data.profession));
+        dispatch(gen(response.data.gender));
+        dispatch(setImage(response.data.img));
+  
+        navigation.replace('DoctorHome');
+      } catch (err) {
+        console.log(err, "Erer");
+        // Alert.alert("PhoneNumber Already Exist")
+        //   return navigation.navigate("Intro")
+      }
     }
   };
-
   const options = ['Option 1', 'Option 2', 'Option 3'];
 
   const toggleDropdown = () => {
@@ -222,7 +265,8 @@ const DoctorAccount = () => {
 
   const dropdown = [
     {label: 'Urologist', value: 'Urologist'},
-    {label: 'Neurologist', value: 'Neurologist'},
+    {label: 'Physiotherapy', value: 'Physiotherapy'},
+    {label: 'Mental Wellness', value: 'Mental Wellness'},
   ];
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
@@ -245,7 +289,15 @@ const DoctorAccount = () => {
     ]);
   };
 
-
+  const handlePlaceSelect = (data, details) => {
+    if (details) {
+      setSelectedLocation({
+        address: data.description,
+        latitude: details.geometry.location.lat,
+        longitude: details.geometry.location.lng,
+      });
+    }
+  };
   return (
     <>
     {user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
@@ -254,9 +306,9 @@ const DoctorAccount = () => {
         <Spinner />
       ) : (
     <View  style={styles.container} >
-      <ScrollView bounces={false} style={{ flex:1 }}>
+      {/* <ScrollView bounces={false} style={{ flex:1 }}> */}
       <MyStatusBar backgroundColor="transparent" barStyle= "dark-content" />
-      <View style={{height: responsiveScreenHeight(70)}}>
+      <View style={{height: responsiveScreenHeight(70), marginVertical: responsiveScreenHeight(-1)}}>
         <View style={{flexDirection: 'row'}}>
           <Header image={<BackBtn />} handlePress={handlePress} />
           <View
@@ -271,7 +323,10 @@ const DoctorAccount = () => {
         {/* Render form inputs based on the current step */}
         {/* ... */}
         {step === 1 && (
-          <View style={{marginVertical: responsiveScreenHeight(2)}}>
+          
+          <View
+          //  style={{marginVertical: responsiveScreenHeight()}}
+           >
             <TouchableOpacity
               style={styles.avatarContainer}
               onPress={handleImageUpload}>
@@ -283,8 +338,80 @@ const DoctorAccount = () => {
                 />
               </View>
             </TouchableOpacity>
-     <ScrollView>
-            <View>
+            <View style={{ position: 'relative', height: 70 }}>
+              <Text style={styles.inputLabel}>My Address</Text>
+              {/* <View style={{position: 'relative', height:50}}> */}
+                    <GooglePlacesAutocomplete
+                    GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                    fetchDetails={true}
+                    styles={{
+                      container: {
+                        borderColor: '#EBEBEB',
+    borderWidth: 1,
+                        borderRadius:8
+                      }, // Style for the entire component
+                      textInputContainer: {
+                        color: "grey"
+                      }, // Style for the text input container
+                      textInput: {
+                        color: "grey"
+                      }, // Style for the text input
+                      listView: {
+                        position: 'absolute',
+                        top: 40,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: 'white',
+                        zIndex: 999, // Increase the zIndex value
+                        elevation: 999, // For Android, use elevation as well
+                      },
+                    }}
+                    debounce={800}
+                        placeholder='Search destination'
+                        onPress={(data, details = null) => {
+                          console.log(data)
+                          // 'data' contains information about the selected place
+                          // 'details' contains detailed information about the selected place
+                          handlePlaceSelect(data, details);
+                          // console.log('Autocomplete Data:', data);
+                          // console.log('Place Details:', details);
+                          // console.log(JSON.stringify(details?.geometry?.location));
+                        }}
+                        query={{
+                            key: "AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY",
+                            language: 'en',
+                        }}
+                        ListView={SectionList}
+
+
+                    />
+                    {/* </View> */}
+                    {/* <View style={{ padding: 20 }}>
+        <Text>Doctor Account</Text>
+        <GooglePlacesAutocomplete
+          GooglePlacesDetailsQuery={{ fields: 'geometry,formatted_address' }}
+          fetchDetails={true}
+          placeholder='Search for a hospital branch'
+          onPress={(data, details = null) => {
+            if (details) {
+              addHospitalBranch(data.structured_formatting.main_text, details.formatted_address, details.geometry.location.lat, details.geometry.location.lng);
+              setSelectedLocation(null); // Reset selected location when adding a new branch
+            }
+            console.log('Autocomplete Data:', data);
+                          console.log('Place Details:', details);
+                          console.log(JSON.stringify(details?.geometry?.location));
+          }}
+          query={{
+            key: 'AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY',
+            language: 'en',
+          }}
+        />
+        
+      </View> */}
+                {/* </ScrollView> */}
+            </View>
+     {/* <ScrollView> */}
+            <View style={{zIndex: -1}}>
               <Text style={styles.inputLabel}>First Name</Text>
               <InputField
                 placeholder="First Name"
@@ -294,7 +421,7 @@ const DoctorAccount = () => {
                 onChangeFocus={()=> setEnabledShift(true)}
               />
             </View>
-            <View>
+            <View style={{zIndex: -1}}>
               <Text style={styles.inputLabel}>Last Name</Text>
               <InputField
                 placeholder="Last Name"
@@ -304,7 +431,7 @@ const DoctorAccount = () => {
                 
               />
             </View>
-            <View>
+            <View style={{zIndex: -1}}>
               <Text style={styles.inputLabel}>Email</Text>
               <InputField
                 placeholder="Email"
@@ -342,7 +469,7 @@ const DoctorAccount = () => {
                 ))}
               </View>
             </View>
-            </ScrollView>
+            {/* </ScrollView> */}
           </View>
         )}
         {step === 2 && (
@@ -431,70 +558,12 @@ const DoctorAccount = () => {
                 keyboardType="default"
               />
             </View>
-            <View>
-              <Text style={styles.inputLabel}>My Address</Text>
-              {/* <InputField
-                placeholder="Address"
-                value={address}
-                handleChange={text => setAddress(text)}
-                keyboardType="default"
-                image={<Location />}
-              /> */}
-              <ScrollView>
-                    <GooglePlacesAutocomplete
-                    GooglePlacesDetailsQuery={{ fields: "geometry" }}
-                    fetchDetails={true}
-                        placeholder='Search destination'
-                        onPress={(data, details = null) => {
-                          // 'data' contains information about the selected place
-                          // 'details' contains detailed information about the selected place
-                          if (details) {
-                            setSelectedLocation({
-                              address: data.description,
-                              latitude: details.geometry.location.lat,
-                              longitude: details.geometry.location.lng,
-                            });
-                          }
-                          // console.log('Autocomplete Data:', data);
-                          // console.log('Place Details:', details);
-                          // console.log(JSON.stringify(details?.geometry?.location));
-                        }}
-                        query={{
-                            key: "AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY",
-                            language: 'en',
-                        }}
-
-
-                    />
-                    {/* <View style={{ padding: 20 }}>
-        <Text>Doctor Account</Text>
-        <GooglePlacesAutocomplete
-          GooglePlacesDetailsQuery={{ fields: 'geometry,formatted_address' }}
-          fetchDetails={true}
-          placeholder='Search for a hospital branch'
-          onPress={(data, details = null) => {
-            if (details) {
-              addHospitalBranch(data.structured_formatting.main_text, details.formatted_address, details.geometry.location.lat, details.geometry.location.lng);
-              setSelectedLocation(null); // Reset selected location when adding a new branch
-            }
-            console.log('Autocomplete Data:', data);
-                          console.log('Place Details:', details);
-                          console.log(JSON.stringify(details?.geometry?.location));
-          }}
-          query={{
-            key: 'AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY',
-            language: 'en',
-          }}
-        />
-        
-      </View> */}
-                </ScrollView>
-            </View>
+           
             
           </View>
         )}
       </View>
-      </ScrollView>
+      {/* </ScrollView> */}
       <TouchableOpacity style={styles.button} onPress={handleNext}>
         <Text style={styles.buttonText}>
           {step < totalSteps ? 'Next' : 'Submit'}

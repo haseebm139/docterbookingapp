@@ -1,11 +1,18 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { responsiveScreenHeight, responsiveScreenFontSize } from "react-native-responsive-dimensions";
 import React from 'react';
 
-const CustomButtom = ({title, onPress, style}) => {
+const CustomButtom = ({title, onPress, style,loading }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.btnContainer, style]}>
-      <Text style={[styles.btnText, style]}>{title}</Text>
+    <TouchableOpacity
+      onPress={loading ? null : onPress} // Disable button when loading is true
+      style={[styles.btnContainer, loading && styles.btnContainerDisabled, style]}
+    >
+      {loading ? (
+        <ActivityIndicator color="white" size="small" style={styles.activityIndicator} />
+      ) : (
+        <Text style={[styles.btnText, style]}>{title}</Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -23,9 +30,15 @@ const styles = StyleSheet.create({
     height: responsiveScreenHeight(6.5),
     marginTop: 10,
   },
+  // btnContainerDisabled: {
+  //   backgroundColor: 'gray', // Change the background color when disabled
+  // },
   btnText: {
     fontSize: responsiveScreenFontSize(2),
     color: '#fff',
     fontFamily: 'PlusJakartaSans-Bold',
+  },
+  activityIndicator: {
+    marginLeft: 8, // Add some spacing between indicator and text
   },
 });

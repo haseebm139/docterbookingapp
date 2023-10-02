@@ -15,7 +15,8 @@ import {
   setFirstName as firstname ,
   setLastName as lastname,
   setEmail as Email,
-  setgender as Gender
+  setgender as Gender,
+  setAvatar as userImage
 } from './Redux/Reducer/CreateAccount/CustomerAccount';
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
@@ -33,7 +34,7 @@ const AccountScreen = ({route}) => {
   const {role} = route.params;
   const phone = useSelector((State) => State.phone)
   const user = useSelector((state)=> state.customerAccount)
-  console.log(user.id)
+  console.log(user)
   console.log(phone)
   const dispatch = useDispatch()
   const handleRadioChange = (value) => {
@@ -61,22 +62,31 @@ useEffect(()=>{
   async function fetchData() {
   const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/detail",{
       phone_no: phone,
-    }).then((response)=>{
-        console.log(response.data)
-        dispatch(setId(response.data.id))
-      dispatch(firstname(response.data.f_name))
-      dispatch(lastname(response.data.l_name))
-      dispatch(Email(response.data.email))
-      dispatch(Gender(response.data.gender))
-      // navigation.navigate("HomePage")
+    })
+    // .then((response)=>{
+    //     console.log(response.data)
+    //     dispatch(setId(response.data.id))
+    //   dispatch(firstname(response.data.f_name))
+    //   dispatch(lastname(response.data.l_name))
+    //   dispatch(Email(response.data.email))
+    //   dispatch(Gender(response.data.gender))
+    //   dispatch(userImage(response.data.img.data.join('')))
+    //   // navigation.navigate("HomePage")
       
       
-    }).catch(err => console.log(err))
+    // }).catch(err => console.log(err))
+    console.log(data.data)
+    if(data.data){
+      dispatch(setId(data.data.id))
+      dispatch(firstname(data.data.f_name))
+      dispatch(Email(data.data.email))
+      dispatch(lastname(data.data.l_name))
+      dispatch(Gender(data.data.gender))
+      dispatch(userImage(data.data.img))
+    }
   }
-
   fetchData();
 }, []);
-
   const handleCameraUpload = () => {
     launchCamera({ mediaType: 'photo' }, response => {
       if (!response.didCancel && !response.errorCode) {
@@ -100,36 +110,55 @@ useEffect(()=>{
     setIsLiked(updatedState);
   };
   console.log(gender)
-
-  const handlePress = async()=>{
-    // console.log(firstName, lastName, email, isLiked)
-    const data = await axios.post("https://customdemowebsites.com/dbapi/paUsers/add",{
-      f_name: firstName,
-      l_name: lastName,
-      phone_no: phone,
-      email: email,
-      address:"",
-      gender: gender,
-      image:avatar
-    }).then((response)=>{
-      console.log(response.data)
-      dispatch(setId(response.data.id))
-      dispatch(firstname(firstName))
-      dispatch(lastname(lastName))
-      dispatch(Email(email))
-      dispatch(Gender(gender))
-      navigation.navigate("HomePage")
-    }).catch(err => console.log(err))
-    
-  }
- 
+  const handlePress = async () => {
+    // Create a new FormData object
+    const formData = new FormData();
+    // Append your other data fields to the formData
+    formData.append('f_name', firstName);
+    formData.append('l_name', lastName);
+    formData.append('phone_no', phone);
+    formData.append('email', email);
+    formData.append('address', ''); // You can add other fields as needed
+    formData.append('gender', gender);
+    // Append the image file to formData
+    if (avatar) {
+      const imageFile = {
+        uri: avatar,
+        name: 'avatar.jpg', // You can choose any file name here
+        type: 'image/jpeg', // Adjust the MIME type if needed
+      };
+      formData.append('image', imageFile);
+    }
+    try {
+      const response = await axios.post(
+        'https://customdemowebsites.com/dbapi/paUsers/add',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set the content type to multipart/form-data
+          },
+        }
+      );
+      console.log(response.data);
+      dispatch(setId(response.data.id));
+      dispatch(firstname(response.data.f_name));
+      dispatch(lastname(response.data.l_name));
+      dispatch(Email(response.data.email));
+      dispatch(Gender(response.data.gender));
+      dispatch(userImage(response.data.img));
+      navigation.navigate('HomePage');
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
-    {user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
+    {
+    user.id ? ( // Check if the user.id exists, if yes, navigate to the desired page
         <>{navigation.reset({ index: 0, routes: [{ name: 'HomePage' }] })}</>
-      ) : loading ? <Spinner/> : (
-   
-    <KeyboardAvoidingView behavior='padding' style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
+      ) 
+      : (
+    <KeyboardAvoidingView  style={{ flex:1 ,paddingBottom: 20, backgroundColor:"#fff"}} >
       <View  style={styles.container}>
        <ScrollView>
       <View>
@@ -234,7 +263,6 @@ useEffect(()=>{
     </>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -361,5 +389,4 @@ const styles = StyleSheet.create({
     color:"#172331"
   }
 });
-
 export default AccountScreen;

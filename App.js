@@ -5,14 +5,9 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -34,8 +29,7 @@ import MyProfile from './src/screens/MyProfile';
 import Schedule from './src/screens/Appointment/Appointment';
 import ReviewScreen from './src/screens/Appointment/Review/ReviewScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import store from './src/screens/Redux/store';
 import DoctorHomePage from './src/screens/Doctor/HomePage';
 import Availibility from './src/screens/Doctor/Availibility';
@@ -49,15 +43,68 @@ import DoctorOtpVerification from './src/screens/Auth/DoctorLogin/DoctorOtPVerif
 import DoctorTabNavigator from './src/components/Doctortab/navigation';
 import Detail from './src/screens/Details';
 import AddAvailability from './src/screens/Doctor/Availibility/AddAvailibility';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import { ToastProvider } from 'react-native-paper-toast';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import DoctorNotifications from './src/screens/Notification/DoctorNotification';
+import messaging from '@react-native-firebase/messaging';
+
 
 function App() {
+
+//   useEffect(() => {
+//     messaging()
+//   .requestPermission()
+//   .then(() => {
+//     console.log('Permission granted');
+//   })
+//   .catch((error) => {
+//     console.log('Permission denied', error);
+//   });
+
+//   messaging().setBackgroundMessageHandler(async remoteMessage => {
+//     // Handle background notifications here
+//     console.log('Background Message:', remoteMessage);
+//   });
+//  messaging().onMessage(async (remoteMessage) => {
+//       // Handle the received notification here
+//       console.log('Notification received in the foreground:', remoteMessage);
+//     });
+//     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+//       // Handle the received notification here
+//       console.log('Notification received in the foreground:', remoteMessage);
+      
+//     });
+  
+//     return unsubscribe;
+//   }, []);
+ 
+
+  
   const Stack = createNativeStackNavigator();
   return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <PaperProvider theme={DefaultTheme}>
+       <ToastProvider>
   <Provider store={store}>
     <View style={{flex: 1}}>
       <NavigationContainer style={styles.sectionContainer}>
         <Stack.Navigator
           screenOptions={{
+            cardStyleInterpolator: ({ current, next, layouts }) => {
+              return {
+                cardStyle: {
+                  transform: [
+                    {
+                      translateX: current.progress.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [layouts.screen.width, 0],
+                      }),
+                    },
+                  ],
+                },
+              };
+            },
             headerShown: false,
           }}
           initialRouteName="SplashScreen">
@@ -75,6 +122,7 @@ function App() {
           <Stack.Screen name="DoctorAccount" component={DoctorAccount} />
           <Stack.Screen name="DoctorOtp" component={DoctorOtpVerification} />
           <Stack.Screen name="Details" component={Detail} />
+          <Stack.Screen name="DoctorNotification" component={DoctorNotifications} />
           <Stack.Screen
             name="Authentication"
             component={MobileAuthentication}
@@ -95,6 +143,9 @@ function App() {
       </NavigationContainer>
     </View>
     </Provider>
+    </ToastProvider>
+    </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 

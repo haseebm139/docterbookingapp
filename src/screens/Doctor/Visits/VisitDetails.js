@@ -21,8 +21,11 @@ import MyStatusBar from '../../../components/Statusbar';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../../components/Header'
 import axios from 'axios';
+import { moveVisitToPast } from '../../Redux/Reducer/DoctorVisits';
+import { useDispatch } from 'react-redux';
 
 const VisitDetails = ({route}) => {
+  const dispatch = useDispatch()
   const {item} = route.params
   console.log(item)
   const Navigation = useNavigation()
@@ -44,13 +47,7 @@ const month = months[inputDate.getMonth()];
 const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
 
 const handleCancel = async()=>{
-   const data = await axios.put(`https://customdemowebsites.com/dbapi/visits/${item.id}`,{
-    dr_id: item.dr_id,
-    pa_id:item.pa_id,
-    charges: item.charges,
-    detail: item.detail,
-    visit_no: item.visit_no,
-    date_time: item.start_date_time,
+   const data = await axios.put(`https://customdemowebsites.com/dbapi/visits/${item.visit_id}`,{
     is_pending:0,
     is_done:0,
     is_rejected:1
@@ -58,6 +55,7 @@ const handleCancel = async()=>{
    console.log(data.status)
    if(data.status === 200){
     Alert.alert("Booking has been cancelled")
+    dispatch(moveVisitToPast(item.visit_id));
    }
    else{
     Alert.alert("Something went wrong")
@@ -120,7 +118,8 @@ const handleCancel = async()=>{
         </View>
         
         <View style={styles.confirmedBtn}>
-                <Text style={{color:"#fff", fontFamily: "Raleway-SemiBold", fontSize: 12}}>Upcoming</Text>
+               {item.is_pending === 1 ? <Text style={{color:"#fff", fontFamily: "Raleway-SemiBold", fontSize: 12}}>Upcoming</Text> : 
+               <Text style={{color:"#fff", fontFamily: "Raleway-SemiBold", fontSize: 12}}>Past</Text>} 
             </View>
       </View>
       <View style={styles.appointmentContainer}>
@@ -168,7 +167,7 @@ const handleCancel = async()=>{
                 fontSize: 14,
                 width: '70%',
               }}>
-              C-12/74, Khirki Ext. Malviya nagar New Delhi, 110017
+             {item.address}
             </Text>
           </View>
           <Divider />
@@ -176,9 +175,11 @@ const handleCancel = async()=>{
  
       </View>
     <View style={{marginVertical: responsiveScreenHeight(2), margin:"auto", justifyContent:"center", alignItems:"center"}}>
+      {item.is_pending ===1 &&
         <TouchableOpacity onPress={handleCancel} style={[styles.button, {backgroundColor:"#fff", borderColor:"#BE2831", borderWidth: 1, borderRadius: 30, width:"80%", margin:"auto"}]}>
             <Text style={{fontSize:16, color:"#BE2831",fontWeight: 700, fontFamily:"PlusJakartaSans-Bold"}}>Cancel Booking</Text>
         </TouchableOpacity>
+}
     </View>
       <View>
         <Text style={{fontFamily:"Raleway-SemiBold", fontSize: 14, color: "#172331", marginBottom: 10}}>Bill Details</Text>

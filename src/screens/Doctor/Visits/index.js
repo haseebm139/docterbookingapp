@@ -7,7 +7,8 @@ import {
   Image,
   StyleSheet,
   FlatList,
-  Linking
+  Linking,
+  ScrollView
 } from 'react-native';
 // import {FlatList} from 'react-native-gesture-handler';
 // import ClockImg from '../../../assets/assets/pace.svg';
@@ -18,20 +19,24 @@ import { useNavigation } from '@react-navigation/native';
 import Visits from '../../../components/doctor/Visits';
 import MyStatusBar from '../../../components/Statusbar';
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import ClockImg from '../../../assets/assets/pace.svg';
 import PhoneIcon from '../../../assets/assets/phoneicon.svg';
 import Location from '../../../assets/assets/location.svg';
+import { setPastData, setUpcomingData } from '../../Redux/Reducer/DoctorVisits';
 // import PencilIcon from '../../../assets/assets/border_color.svg';
 const TotalVisits = () => {
   const [status, setStatus] = useState('Upcoming');
   const [dataList, setDataList] = useState([]);
-  const [upcomingData, setUpcomingData] = useState([]);
-  const [pastData, setPastData] = useState([]);
+  // const [upcomingData, setUpcomingData] = useState([]);
+  // const [pastData, setPastData] = useState([]);
+  const dispatch = useDispatch();
+  const upcomingData = useSelector((state) => state.visits.upcomingData); // Access upcomingData from Redux
+  const pastData = useSelector((state) => state.visits.pastData); 
+  console.log(upcomingData)
   // const {upcoming_visits} = useSelector(state => state.doctorDetail.userDetails)
   const user = useSelector(state => state.doctorAccount)
-  console.log(user)
   const Navigation = useNavigation()
 
   const navigation = useNavigation()
@@ -103,33 +108,35 @@ const TotalVisits = () => {
         const response = await axios.get(
           `https://customdemowebsites.com/dbapi/visits/dr/${user.id}`
         );
-        console.log(response.data)
         const currentDate = new Date();
         const data = response.data;
+        console.log(response.data)
         const upcomingData = data.filter((item) => {
+          const detail = JSON.parse(item.detail); 
+          console.log(detail.from)
           const visitDate = new Date(item.start_date_time);
-          return item.is_pending === 1 && visitDate > currentDate;
+          return item.is_pending === 1   
+           && visitDate > currentDate;
         });
         
         const pastData = data.filter((item) => {
           const visitDate = new Date(item.start_date_time);
-          return item.is_done === 1 && visitDate < currentDate;
+          return item.is_pending === 1 || item.is_rejected || item.is_done  === 1 && visitDate < currentDate;
         });
-        // const upcomingData = data.filter((item) => item.is_pending === 1);
-        // const pastData = data.filter((item) => item.is_done === 1);
         setDataList(upcomingData);
         // Save the filtered data in the "Upcoming" and "Past" tabs
-        setUpcomingData(upcomingData);
-        setPastData(pastData);
+        // setUpcomingData(upcomingData);
+        // setPastData(pastData);
+        dispatch(setUpcomingData(upcomingData));
+        dispatch(setPastData(pastData));
       } catch (err) {
         console.log(err);
       }
     }
 
     fetchData();
-  }, []);
+  }, [dispatch]);
 
-  console.log(upcomingData)
 const renderItems = ({item, index})=>{
   const detailData = JSON.parse(item.detail);
   const inputDateString = item.start_date_time;
@@ -147,8 +154,6 @@ const month = months[inputDate.getMonth()];
 
 const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
 
-console.log(formattedDate);
-  console.log(item)
   return (
     <View style={styles.appointContainer}>
     <View style={styles.leftLine} />
@@ -179,29 +184,31 @@ console.log(formattedDate);
             marginBottom: responsiveScreenHeight(2)
           }}>
           <Location />
-          <Text style={styles.h2}>{item.address}</Text>
+          <Text style={[styles.h2, {width: responsiveScreenWidth(70)}]}>{item.address}</Text>
           
         </View>
       </View>
-      <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phoneNumber}`)}>
+      <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.phone_no}`)}>
             <PhoneIcon />
           </TouchableOpacity>
       
     </View>
     <Divider />
-    <View style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
+    <View  style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"space-between"}}>
     <View style={{marginTop: responsiveScreenHeight(1), flexDirection:"row", gap: 10, alignItems:"center"}}>
-    <Avatar.Image
+    <Avatar.Image size={24} source={ {uri:`https://customdemowebsites.com/dbapi/${item.img}`} }/>
+    {/* <Avatar.Image
         size={responsiveScreenWidth(6)}
-        source={require('../../../assets/assets/doctorimg.png')}
-      />
+        
+        source={uri}
+      /> */}
       <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails", {item})}>
         <Text style={styles.name}>{item.f_name}</Text>
         </TouchableOpacity>
     </View>
-    <View>
+    <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails", {item})}>
       <Text>Visit # {item.visit_id}</Text>
-    </View>
+    </TouchableOpacity>
     </View>
 </View>
   )
@@ -230,70 +237,23 @@ console.log(formattedDate);
           </TouchableOpacity>
         ))}
       </View>
-      {/* <FlatList
-        data={dataList}
-        keyExtractor={(item, index) => {
-            return(index.toString());
-         }}
-        renderItem={renderItem}
-      /> */}
-        {/* {data?.map((item, e)=>{
-      const leftLine = [ item.statusCode === 'Completed' && styles.linegreen, item.statusCode === 'Cancelled' && styles.linered, !item.statusCode && styles.lineblue];
-      return (
-          <>
-        {status === "Upcoming" && item.statusCode == "Upcoming" && <Visits/>}
-        {status === "Past" && item.statusCode == "Past" && <Visits/>}
-        </>
-      );
-    })} */}
-    {/* <View style={styles.tabcontainer}>
-        {ListTab.map(e => (
-          <TouchableOpacity
-            onPress={() => setStatusFilter(e.status)}
-            style={[styles.btnTab, status === e.status && styles.btnActiveTab]}>
-            <Text
-              style={[
-                styles.tabText,
-                status === e.status && styles.tabActiveText,
-              ]}>
-              {e.status}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View> */}
-
-{/* {status === 'Upcoming' && (
-        <FlatList
-          data={upcomingData}
-          renderItem={renderItems}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      )}
-
-      {status === 'Past' && (
-        <FlatList
-          data={pastData}
-          renderItem={({ item }) => (
-            <Visits item={item}/>
-          )}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      )} */}
+     
 
 
 
 <View style={styles.flatListContainer}>
+  
         {status === 'Upcoming' && (
           <View>
             {upcomingData.length > 0 ? (
               <FlatList
                 data={upcomingData}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item, index) => index}
                 renderItem={renderItems}
-                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+                showsVerticalScrollIndicator={true} // Hide the scrollbar for FlatList
               />
             ) : (
-              <Text style={styles.noDataText}>No data found</Text>
+              <Text style={styles.noDataText}>No Visits Found</Text>
             )}
           </View>
         )}
@@ -302,9 +262,9 @@ console.log(formattedDate);
             {pastData.length > 0 ? (
               <FlatList
                 data={pastData}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => index}
                 renderItem={renderItems}
-                showsVerticalScrollIndicator={false} // Hide the scrollbar for FlatList
+                showsVerticalScrollIndicator={true} // Hide the scrollbar for FlatList
               />
             ) : (
               <Text style={styles.noDataText}>No data found</Text>
@@ -343,6 +303,7 @@ const styles = StyleSheet.create({
   btnActiveTab: {
     backgroundColor: '#FEFEFE',
   },
+  
   btnTab: {
     backgroundColor: 'transparent',
     padding: 10,
@@ -357,6 +318,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flexDirection:"row",
     gap: 5
+  },
+  noDataText : {
+    fontFamily: 'Raleway-SemiBold',
+    fontSize: 24,
+    margin: 'auto',
+    textAlign:'center',
+    marginTop: responsiveScreenHeight(30)
   },
   tabActiveText: {
     color: '#666E7D',
@@ -535,6 +503,9 @@ h2: {
     borderRadius: 10,
     left: -1,
     top: 10
+  },
+  flatListContainer: {
+    maxHeight: responsiveScreenHeight(70), // Set the desired height for the FlatList
   },
 });
 

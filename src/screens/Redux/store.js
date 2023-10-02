@@ -4,6 +4,10 @@ import phoneSlice from './Reducer/phoneSlice';
 import customerAccount from './Reducer/CreateAccount/CustomerAccount'
 import doctorAccount from './Reducer/CreateAccount/DoctorAccount'
 import doctorSlice from './Reducer/doctorSlice';
+import DoctorVisits from './Reducer/DoctorVisits';
+import availabilitySlice from './Reducer/availabilitySlice';
+import Notifications from './Reducer/Notifications';
+import FCMToken from './Reducer/CreateAccount/FCMToken';
 
 const store = configureStore({
   reducer: {
@@ -11,7 +15,11 @@ const store = configureStore({
     phone: phoneSlice,
     customerAccount: customerAccount,
     doctorAccount: doctorAccount,
-    doctorDetails: doctorSlice
+    doctorDetails: doctorSlice,
+    visits: DoctorVisits,
+    availability: availabilitySlice,
+    notification : Notifications,
+    fcmToken : FCMToken
   },
 });
 

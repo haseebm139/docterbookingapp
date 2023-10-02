@@ -120,9 +120,14 @@ console.log(formattedDate);
           setIsLoading(false);
         }
       }
-    
-      fetchData();
-    }, [user.id, ]);
+      const pollingInterval = setInterval(fetchData, 5000);
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(pollingInterval);
+    };
+      // fetchData();
+    }, [user.id]);
     console.log(availabilityData)
   return (
     <View style={styles.container}>

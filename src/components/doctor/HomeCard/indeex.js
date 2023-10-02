@@ -2,11 +2,11 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions'
 
-const HomePageCard = ({Head, style, reviews}) => {
+const HomePageCard = ({Head, style, reviews, title}) => {
   return (
     <View style={[styles.container, style]}>
       <Text style={[styles.h1, style]}>{Head}</Text>
-      <Text style={styles.h6}>My earnings</Text>
+      <Text style={styles.h6}>My {title}</Text>
       {reviews && <Text  style={styles.h6}>{reviews} </Text>}
     </View>
   )

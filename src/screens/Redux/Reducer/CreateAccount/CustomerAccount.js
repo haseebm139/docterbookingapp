@@ -8,6 +8,7 @@ const createAccountSlice = createSlice({
     lastName: '',
     email: '',
     gender: '',
+    avatar: null
   },
   reducers: {
     setId:(state, action)=>{
@@ -17,7 +18,7 @@ const createAccountSlice = createSlice({
       state.firstName = action.payload;
     },
     setLastName: (state, action) => {
-        state.firstName = action.payload;
+        state.lastName = action.payload;
       },
     setEmail: (state, action) => {
       state.email = action.payload;
@@ -25,8 +26,11 @@ const createAccountSlice = createSlice({
     setgender: (state, action) => {
       state.gender = action.payload;
     },
+    setAvatar: (state, action) =>{
+     state.avatar = action.payload
+    }
   },
 });
 
-export const { setId,setFirstName,setLastName, setEmail, setgender } = createAccountSlice.actions;
+export const { setId,setFirstName,setLastName, setEmail, setgender , setAvatar} = createAccountSlice.actions;
 export default createAccountSlice.reducer;

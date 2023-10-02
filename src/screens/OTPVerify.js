@@ -28,6 +28,7 @@ const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const inputRefs = useRef([]);
   const phone = useSelector(State => State.phone)
+  const [loading , setLoading] = useState(false)
 
   useEffect(() => {
     
@@ -73,6 +74,7 @@ const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
     navigation.goBack();
   };
   const onPress = async() => {
+    setLoading(true)
     // try{
     //   let data = await confirm.confirm(otp);
     //   console.log("sign IN")
@@ -84,7 +86,7 @@ const OTPScreen = ({role, handleResendOTP, submitOTP}) => {
    
   };
   return (
-    <KeyboardAvoidingView style={{ flex:1 }} behavior='padding'>
+    <KeyboardAvoidingView style={{ flex:1, backgroundColor:"#fff" }} behavior='padding'>
     <View style={styles.container}>
       <View>
         <Header image={<BackBtn />} handlePress={handlePress} />
@@ -270,6 +272,7 @@ const styles = StyleSheet.create({
     height: '100%',
     textAlign: 'center',
     fontSize: 18,
+    color: "#000"
   },
   button: {
     marginTop: 10,
