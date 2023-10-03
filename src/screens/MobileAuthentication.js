@@ -74,11 +74,11 @@ const MobileAuthentication = ({route}) => {
   setLoading(true);
   try{
     
-  const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+  // const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
   
-    setConfirm(confirmation);
-    console.log("confirm",confirmation)
-    console.log("working")
+  //   setConfirm(confirmation);
+  //   console.log("confirm",confirmation)
+  //   console.log("working")
   }catch(err){
     Alert.alert("Please Try Again")
     console.log("err" , err)
@@ -103,18 +103,18 @@ const MobileAuthentication = ({route}) => {
  }
 const submitOTP = async(otp)=>{
   try{
-   const response = await confirm.confirm(otp);
-   console.log(response)
+  //  const response = await confirm.confirm(otp);
+  //  console.log(response)
 
-    Alert.alert("sign In")
-    if(response){
+  //   Alert.alert("sign In")
+  //   if(response){
        if (role === "Customer") {
       navigation.navigate('CreateAccount', { role });
     } else {
       navigation.navigate('DoctorAccount', { role });
     }
     
-    }
+    // }
       
   }catch(err){
     Alert.alert("invalid OTP")
@@ -189,18 +189,6 @@ if(next === true){
         }}
         />
        
-        {/* <TextInput placeholder='OTP'
-        onChangeText={value => setOtpInput(value)}
-        />
-        <Button title="submit" onPress={submitOTP}/> */}
-        
-         {/* <InputField
-        onFocus={onChangeFocus}
-        handleChange={handleChange}
-        value={phoneNumber}
-        placeholder="99001 99001"
-        keyboardType="numeric"
-        /> */}
         </View>
        
         </View>
