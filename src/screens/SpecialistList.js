@@ -350,13 +350,13 @@ const Specialist = ({ route }) => {
         {loading && <ActivityIndicator size="large" color="#4464D9" />}
         {!loading && error && <Text style={styles.errorText}>{error}</Text>}
         {!loading && !error && data && data.length === 0 && <Text style={{marginTop: 20}}>No results Found</Text>}
-        {!loading && !error && data && data.map((item) => (
-          <View style={{gap: 20, paddingBottom: 20, marginTop: 10,  borderBottomColor:"#E7E7E7", borderWidth: 2 , alignself: 'self', borderColor: "transparent"}}>
+        {!loading && !error && data && data.map((item, value) => (
+          <View key={value} style={{gap: 20, paddingBottom: 20, marginTop: 10,  borderBottomColor:"#E7E7E7", borderWidth: 2 , alignself: 'self', borderColor: "transparent"}}>
                    <View style={{flexDirection:"row", gap: 20, alignItems:"flex-start"}}>
-                   <Avatar.Image size={64} source={require('../assets/assets/doctorimg.png')} />
+                   <Avatar.Image size={64} source={{uri:`https://customdemowebsites.com/dbapi/${item.img}`}} />
                    <View style={{gap: 5}}>
                       <View style={{flexDirection:"row", alignItems:"center", gap:2, }}>
-                               <Text style={{color:"#172331", fontFamily:"Raleway-Bold", }}>Dr {item.l_name}</Text>
+                               <Text style={{color:"#172331", fontFamily:"Raleway-Bold", }}>Dr {item.f_name}</Text>
                                <Image source={require("../assets/assets/verified.png")}/>
                            </View>
                            <View style={{flexDirection:"row", gap: 5, alignItems:"center"}}>
@@ -371,7 +371,7 @@ const Specialist = ({ route }) => {
                                </View>
                                <View style={{flexDirection:"row", alignItems:"center", gap: 5}}>
                                <Image source={require("../assets/assets/location.png")}/>
-                               <Text style={{color:"#172331", fontFamily:"Raleway-SemiBold",  fontSize: 12}}>{item.address}</Text>
+                               <Text style={{color:"#172331", fontFamily:"Raleway-SemiBold",  fontSize: 12}}>{item.hospital}</Text>
                                </View>
                               
                            </View>
@@ -382,9 +382,9 @@ const Specialist = ({ route }) => {
                            <Text style={{fontFamily:"Raleway-Bold", fontSize: 14, color:"#172331" }}>{item.fee}</Text>
                            <Text style={{fontFamily:"Raleway-Medium", fontSize: 12, color:"#172331"}}>Consultation Fees</Text>
                        </View>
-                       <View style={{backgroundColor:"#4464D9",  borderRadius: 38, width:155, height: 40, alignItems: 'center', justifyContent: 'center'}}>
+                       <TouchableOpacity onPress={()=>{navigation.navigate("DoctorBooking", {item})}} style={{backgroundColor:"#4464D9",  borderRadius: 38, width:155, height: 40, alignItems: 'center', justifyContent: 'center'}}>
                            <Text style={{fontFamily:"Raleway-SemiBold", color:"#fff"}}>Book</Text>
-                       </View>
+                       </TouchableOpacity>
                    </View>
                    </View>
         ))}

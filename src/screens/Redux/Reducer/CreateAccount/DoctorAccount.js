@@ -13,6 +13,7 @@ const createDoctorAccountSlice = createSlice({
     experience:"",
     fee:"",
     gender: '',
+    DoctorImage:""
   },
   reducers: {
     setId:(state, action)=>{
@@ -45,6 +46,9 @@ const createDoctorAccountSlice = createSlice({
     setgender: (state, action) => {
       state.gender = action.payload;
     },
+    setImage: (state, action) => {
+      state.DoctorImage = action.payload;
+    },
   },
 });
 
@@ -56,5 +60,5 @@ export const {
     setFee,
     setHospital,
     setProfession,
-    setLastName, setEmail, setgender } = createDoctorAccountSlice.actions;
+    setLastName, setEmail, setgender, setImage } = createDoctorAccountSlice.actions;
 export default createDoctorAccountSlice.reducer;

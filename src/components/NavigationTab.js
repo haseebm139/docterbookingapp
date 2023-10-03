@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomePage from '../screens/HomePage';
-import { View, StyleSheet, Text  } from 'react-native';
-import React, { useEffect } from 'react';
+import { View, StyleSheet, Text,  } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native-svg';
 import HomeIcon from '../assets/assets/home.svg'
 import CalendarIcon from '../assets/assets/calendar.svg'
@@ -16,12 +16,36 @@ import MyProfile from '../screens/MyProfile';
 import Schedule from '../screens/Appointment/Appointment';
 import Notification from '../screens/Notification/Notification';
 import { responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
+import { useDispatch, useSelector } from 'react-redux';
+import { Avatar, Divider } from 'react-native-paper';
+import axios from 'axios';
 
 const Tab = createBottomTabNavigator();
 
 
 const  CustomTabNavigator = ()=> {
+  const [img, setImage] = useState(null)
+  const user = useSelector((state)=> state.customerAccount)
+  // const notificationCount = useSelector((state) => state.notifications.notificationCount);
+  // const dispatch = useDispatch();
 
+  // const handleBadgeClick = () => {
+  //   if (notificationCount > 0) {
+  //     // Reset the notification count when the badge is clicked
+  //     dispatch(resetNotificationCount());
+  //   }
+  // };
+  console.log(user.avatar)
+  const urlImage = `https://customdemowebsites.com/dbapi/${user.avatar}`
+//   useEffect(()=>{
+//     async function fetchData() {
+//       const response = await axios.get(`https://customdemowebsites.com/dbapi/paUsers/${user.id}`)
+//       console.log(response.data.img.toString('base64'))
+//       setImage(response.data.img)
+//       }
+      
+//   fetchData()
+//  },[])
   const navigation = useNavigation();
   return (
     <Tab.Navigator 
@@ -95,14 +119,16 @@ const  CustomTabNavigator = ()=> {
         tabBarIcon:({focused})=>(
             <View>
               <View style={ focused?styles.lineTransition : null}/>
-                <UserImg width={24}/>
+                {/* <UserImg width={24}/> */}
+                {/* <img width={24}  source={user.avatar} /> */}
+                <Avatar.Image size={24} source={urlImage ? {uri:urlImage} : ""}/>
             </View>
         )
       }}
       
       
       />
-    </Tab.Navigator>
+    </Tab.Navigator>  
   );
 }
 

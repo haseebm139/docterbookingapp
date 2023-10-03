@@ -21,13 +21,19 @@ import {Avatar} from 'react-native-paper';
 import Swiper from 'react-native-swiper';
 import DoctorReviews from '../components/doctor/HomepageReviews';
 import {Dropdown} from 'react-native-element-dropdown';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { setAvatar, setEmail, setFirstName, setLastName, setgender } from './Redux/Reducer/CreateAccount/CustomerAccount';
 
 const HomePage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [popularDoctors, setPopularDoctors] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const {id} = useSelector((state)=> state.customerAccount)
+  const fcm_token = useSelector(state => state.fcmToken.fcmToken)
+  console.log(fcm_token)
+  const dispatch = useDispatch()
+  // console.log(id)
 
   useEffect(() => {
     async function fetchData() {
@@ -35,7 +41,7 @@ const HomePage = () => {
         const res = await axios.get(
           'https://customdemowebsites.com/dbapi/drUsers/popular_doctors/list'
         );
-        console.log(res.data)
+        // console.log(res.data)
         setPopularDoctors(res.data.data);
         setIsDataLoaded(true);
       } catch (error) {
@@ -46,11 +52,49 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  useEffect(()=>{
+    async function fetchData() {
+      try {
+        const res = await axios.get(
+          `https://customdemowebsites.com/dbapi/paUsers/${id}`
+        );
+        const {user} = res.data
+       const {address,email, f_name,img,l_name } = user
+       console.log(user.email)
+        dispatch(setEmail(user.email))
+        dispatch(setFirstName(user.f_name))
+        dispatch(setLastName(user.l_name))
+        dispatch(setAvatar(user.img))
+        dispatch(setgender(user.gender))
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  },[])
+  useEffect(()=>{
+    async function fetchData() {
+      try {
+        const res = await axios.put(
+          `https://customdemowebsites.com/dbapi/paUsers/${id}`,{
+            fcm_token:fcm_token,
+          }
+        );
+        console.log(res)
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  },[])
+
   const handleIndexChanged = index => {
     setCurrentIndex(index);
   };
   const user = useSelector(state => state.customerAccount)
-  console.log(user)
+  console.log(user.firstName)
   const navigation = useNavigation();
   const data = [
     {
@@ -120,7 +164,7 @@ const HomePage = () => {
             <Text style={styles.heading}>Find your specialist</Text>
             <View >
             {/* {renderLabel()} */}
-            <Dropdown
+            {/* <Dropdown
               style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
@@ -140,7 +184,7 @@ const HomePage = () => {
                 setValue(item.value);
                 setIsFocus(false);
               }}
-            />
+            /> */}
           </View>
           </View>
 

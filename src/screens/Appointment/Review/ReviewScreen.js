@@ -7,12 +7,19 @@ import Verified from '../../../assets/assets/doctorverified.svg'
 import Backbtn from '../../../assets/assets/icon-button.svg'
 import StarFilled from '../../../assets/assets/starfill.svg'
 import StarEmpty from '../../../assets/assets/starempty.svg'
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { useToast } from 'react-native-paper-toast';
 
-const ReviewScreen = () => {
+const ReviewScreen = ({route}) => {
+  const {item} = route.params
+  console.log(item)
+  const user = useSelector((state) => state.customerAccount);
   const [rating, setRating] = useState(4);
   const [inputHeight, setInputHeight] = useState(10);
-  const [post, setPost] = useState('A good experience with Dr. Neeraj. He always tries to understand my speech carefully. I really appreciate his process');
-
+  const [post, setPost] = useState('');
+  const toaster = useToast();
+console.log(post)
   const handleRating = (selectedRating) => {
     setRating(selectedRating);
     console.log(selectedRating)
@@ -31,6 +38,21 @@ const ReviewScreen = () => {
   useEffect(() => {
     adjustInputHeight();
   }, [post]);
+
+  const handleSubmit = async()=>{
+      // navigation.navigate("DoctorDetail");
+      const data = await axios.post(`https://customdemowebsites.com/dbapi/reviews/add`,{
+        dr_id: item.dr_id,
+        pa_id:user.id,
+        rating: rating,
+       review: post
+      })
+      if(data){
+        // toaster.show({ message: {data}, duration: 2000 })
+        navigation.navigate("HomePage")
+      }
+      console.log(data.data)
+  }
 
   return (
     <View style={{flex:1, paddingHorizontal: 20, paddingTop:responsiveScreenHeight(4), justifyContent:"space-between", paddingBottom: 30}} >
@@ -61,7 +83,7 @@ const ReviewScreen = () => {
         <View style={{gap: 5}}>
           <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:"center", gap: 2}}>
             <Text style={{color: '#172331', fontFamily: 'Raleway-Bold'}}>
-              Dr Rahul
+              Dr {item.f_name}
             </Text>
             <Verified/>
           </View>
@@ -72,7 +94,7 @@ const ReviewScreen = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              Physiotherapist
+              {item.profession}
             </Text>
             <View style={styles.dotCircle} />
             <Text
@@ -81,7 +103,7 @@ const ReviewScreen = () => {
                 fontSize: 12,
                 fontFamily: 'Raleway-SemiBold',
               }}>
-              24 yrs exp
+              {item.experience}
             </Text>
           </View>
          
@@ -125,9 +147,7 @@ const ReviewScreen = () => {
       </View>
       </View>
       <View style={{ width:"100%", alignSelf: 'flex-end' }} >
-        <TouchableOpacity onPress={() => {
-        navigation.navigate("DoctorDetail");
-      }}>
+        <TouchableOpacity onPress={handleSubmit}>
           <View style={styles.button}>
             <Text style={{fontSize:16, color:"#fff", fontFamily:"PlusJakartaSans-Bold"}}>Submit Review</Text>
           </View>

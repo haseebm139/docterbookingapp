@@ -33,7 +33,6 @@ const ReviewComponent = () => {
                 <View style={{flexDirection:"row", gap: 20}}>
               <Text style={styles.author}>{review.author}</Text>
                 <View style={{flexDirection:"row", alignItems:"center", gap: 4, }}>
-                    
                     <Image source={require("../assets/assets/star.png")}/>
                     <Text style={{color:"#172331", fontFamily:"Raleway-SemiBold", fontSize: 12}}>4.1</Text>
                     </View>

@@ -11,16 +11,18 @@ import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setFirstName, setId } from './Redux/Reducer/CreateAccount/CustomerAccount';
-import { setLastName } from './Redux/Reducer/CreateAccount/DoctorAccount';
+import { setFirstName, setId, setLastName } from './Redux/Reducer/CreateAccount/CustomerAccount';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const MyProfile = () => {
  const navigation = useNavigation()
  const dispatch = useDispatch()
  const user = useSelector(state => state.customerAccount)
+//  const {avatar} = user
  const phone = useSelector(state => state.phone)
  const [img, setImg] = useState("")
+ const urlImage = `https://customdemowebsites.com/dbapi/${user.avatar}`
  console.log(user)
 //  useEffect(()=>{
 //   const res = axios.get("https://customdemowebsites.com/dbapi/paUsers/13")
@@ -40,11 +42,19 @@ const MyProfile = () => {
   fetchData();
 }, []);
 
-const handlePress = ()=>{
+const handlePress = async()=>{
+  try {
+    // Replace 'userData' with the key you use to store user data in AsyncStorage
+    await AsyncStorage.removeItem('id');
+    console.log('AsyncStorage cleared on logout');
+  } catch (error) {
+    console.error('Error clearing AsyncStorage on logout:', error);
+  }
   dispatch(setFirstName(''))
   dispatch(setId(''))
   dispatch(setLastName(''))
-   navigation.navigate("Intro")
+   navigation.reset({ index: 0, routes: [{ name: 'Intro' }] })
+  //  navigation.reset
 }
   return (
     <View style={styles.container}>
@@ -55,7 +65,8 @@ const handlePress = ()=>{
       <View style={styles.sectionDone}>
             {/* <Avatar.Image source={(require("../assets/assets/avatar.png"))}/> */}
             {/* <Avatar.Image source={(require("../assets/assets/avatar.png"))}/> */}
-            <Avatar.Image source={img ? {uri:img} : require("../assets/assets/avatar.png")}/>
+            <Avatar.Image source={urlImage ? {uri:urlImage} : require("../assets/assets/avatar.png")}/>
+            {/* <Avatar.Image source={user? {uri: {user.avatar}}}/> */}
             <View style={{ alignContent:"center", alignSelf:"center", gap: 10 }}>
                 <Text style={styles.textwhitelg}>{user.firstName} {user.lastName}</Text>
                 <Text style={styles.textsm}>{phone}</Text>

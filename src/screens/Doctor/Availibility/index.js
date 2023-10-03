@@ -78,12 +78,12 @@ import axios from 'axios'
 const Availibility = () => {
   const navigation = useNavigation();
   const user = useSelector(state => state.doctorAccount);
-  console.log(user);
+  console.log(user.id);
 
   const [availabilityData, setAvailabilityData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
    
-    console.log(user)
+  console.log(user)
     const handlePress = ()=>{
         navigation.navigate("MyAvailability")
     }
@@ -91,10 +91,12 @@ const Availibility = () => {
       async function fetchData() {
         try {
           const currentDate = new Date();
-          const formattedDate = `${currentDate.getDate()}-${
-            currentDate.getMonth() + 1
-          }-${currentDate.getFullYear()}`;
-          console.log(formattedDate)
+const year = currentDate.getFullYear();
+const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+const day = currentDate.getDate().toString().padStart(2, '0');
+
+const formattedDate = `${year}-${month}-${day}`;
+console.log(formattedDate);
     
           const response = await axios.post(
             `https://customdemowebsites.com/dbapi/availability/dr/${user.id}`,
@@ -118,8 +120,13 @@ const Availibility = () => {
           setIsLoading(false);
         }
       }
-    
-      fetchData();
+      const pollingInterval = setInterval(fetchData, 5000);
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(pollingInterval);
+    };
+      // fetchData();
     }, [user.id]);
     console.log(availabilityData)
   return (

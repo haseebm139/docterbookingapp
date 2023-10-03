@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
@@ -12,9 +12,49 @@ import {
   responsiveScreenWidth
 } from "react-native-responsive-dimensions";
 import MyStatusBar from '../components/Statusbar';
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFCMToken } from './Redux/Reducer/CreateAccount/FCMToken';
 
 const Intro = () => {
+  const dispatch = useDispatch()
   const [currentIndex, setCurrentIndex] = useState(0);
+  const fcm_token = useSelector(state => state.fcmToken.fcmToken)
+  console.log(fcm_token)
+  useEffect(() => {
+    // Function to get the FCM token
+    const getFCMToken = async () => {
+      try {
+        // Request permission for notifications (iOS only)
+        await messaging().requestPermission();
+
+        // Get the FCM token
+        const token = await messaging().getToken();
+        if (token) {
+          console.log('FCM Token:', token);
+          const res = await fcmU
+          dispatch(setFCMToken(token));
+          // You can send this token to your server for further use.
+        } else {
+          console.log('No FCM token available.');
+        }
+      } catch (error) {
+        console.error('Error getting FCM token:', error);
+      }
+    };
+
+    const requestPermission = async ()=>{
+      const authstatus =await messaging().requestPermission();
+      console.log("authorizatoin", authstatus)
+      return authstatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authstatus === messaging.AuthorizationStatus.PROVISIONAL
+    }
+
+    // Call the function to get the FCM token
+    getFCMToken();
+    requestPermission()
+  }, []);
 
   const navigation = useNavigation();
 
@@ -33,8 +73,39 @@ const Intro = () => {
     navigation.navigate("Authentication", {role})
     console.log(role)
   }
+    // const sendNotification = async () => {
+    //   // try {
+    //   //   const token = await messaging().getToken();
+    //   //   console.log(token)
+    //   //   // if (token) {
+    //   //   //   const notification = {
+    //   //   //     to: token,
+    //   //   //     title: 'Notification Title',
+    //   //   //     body: 'This is the notification body',
+    //   //   //   };
+    
+    //   //   //   // Send the notification to the device
+    
+    //   //   //   console.log('Notification sent successfully');
+    //   //   // } else {
+    //   //   //   console.log('No FCM token available.');
+    //   //   // }
+    //   // } catch (error) {
+    //   //   console.error('Error sending notification:', error);
+    //   // }
+    //   try {
+    //     const response = await axios.post('https://customdemowebsites.com/dbapi/notify/push-notification', {
+    //       fcm_token: 'dQ-qh9VERemWWDvomvbQwE:APA91bGr4Q-Q-5Lq0TAQlnZH5pqb0iBNSln7UOzD36VO-pTAB2blzJ5rJ8xA17qUryn-LEjQ2AgVBEeasgcXHXJzbBWkCox5xe38_6qnSiufVPLt03-fDhOnftZMFWNRVV6xxtJAFTz_',
+    //     });
+    
+    //     console.log('Notification sent successfully:', response.data);
+    //   } catch (error) {
+    //     console.error('Error sending notification:', error);
+    //   }
+    // };
+ 
   return (
-    <View>
+    <View>  
       <View style={styles.firstSections}>
         <MyStatusBar barStyle="light-content"/>
         <Image

@@ -8,7 +8,8 @@ import { Avatar, Divider } from 'react-native-paper';
 import { responsiveFontSize, responsiveScreenHeight, responsiveScreenWidth } from 'react-native-responsive-dimensions';
 import { useNavigation } from '@react-navigation/native';
 
-const Visits = () => {
+const Visits = ({formattedDate, detailData, item}) => {
+  console.log(formattedDate, detailData, item)
   
   // const {detail} = item
   const Navigation = useNavigation()
@@ -31,7 +32,7 @@ const Visits = () => {
                 marginVertical: responsiveScreenHeight(1)
               }}>
               <ClockImg />
-              <Text style={styles.h1}>Fri, 20 Mar  |  07:00 - 07:30 PM</Text>
+              <Text style={styles.h1}>{formattedDate} |  {detailData.from}- {detailData.to}</Text>
               
             </View>
             <View
@@ -42,7 +43,7 @@ const Visits = () => {
                 marginBottom: responsiveScreenHeight(2)
               }}>
               <Location />
-              <Text style={styles.h2}>2715 Ash Dr. San Jose, South Dakota 83475</Text>
+              <Text style={styles.h2}>{item.address}</Text>
               
             </View>
           </View>
@@ -56,7 +57,7 @@ const Visits = () => {
             source={require('../../../assets/assets/doctorimg.png')}
           />
           <TouchableOpacity onPress={()=> Navigation.navigate("VisitDetails")}>
-            <Text style={styles.name}>Mehtab Alam</Text>
+            <Text style={styles.name}>{item.f_name} {item.l_name}</Text>
             </TouchableOpacity>
         </View>
     </View>

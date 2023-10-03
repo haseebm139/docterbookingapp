@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, ScrollView } from 'react-native';
 import ArrowIcon from '../../assets/assets/Vector.svg'
 import NotBanKing from '../../assets/assets/credit_card.svg'
 import Upi from '../../assets/assets/upi.svg'
@@ -12,71 +12,55 @@ import { Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 import MyStatusBar from '../../components/Statusbar';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 
 const Notification = () => {
+  const user = useSelector((state)=> state.customerAccount)
+  const [notify , setNotify] = useState([])
+  const currentDate = new Date();
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const formattedDate = `Today, ${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
+  
+  console.log(formattedDate);
  const navigation = useNavigation();
+ useEffect(()=>{
+    async function fetchData() {
+        const data = await axios.get(`https://customdemowebsites.com/dbapi/notifications/pa/${user.id}`)
+          console.log(data.data)  
+          setNotify(data.data)
+        }
+        fetchData()
+ },[])
   return (
     <>
-      <View style={styles.container}>
+     <ScrollView contentContainerStyle={styles.container}>
         <MyStatusBar backgroundColor="transparent"/>
        <Text style={styles.head}>Notification</Text>
 
        <View style={styles.bottomborder}>
-        <Text style={styles.textsm}>Today, March 25, 2022</Text>
+        <Text style={styles.textsm}>{formattedDate}</Text>
        </View>
-      <View >
-        <View style={styles.cardContainer}>
-            <CreditCard/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        <View style={styles.cardContainer}>
-            <NotBanKing/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        <View style={styles.cardContainer}>
-            <Paytm/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        <View style={styles.cardContainer}>
-            <Upi/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        <View style={styles.cardContainer}>
-            <GooglePlay/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        <View style={styles.cardContainer}>
-            <PhonePE/>
-            <View>
-            <Text style={styles.cardTitle}>Appointment Alarm</Text>
-            <Text style={styles.textxs}>Your appointment will be start after 30 minutes.
-Stay with app and take care.</Text>
-            </View>
-        </View>
-        
-        </View>
-        </View>
+       <ScrollView style={{paddingBottom: responsiveScreenHeight(60), flex: 1 , height: responsiveScreenHeight(10)}}>
+       {notify.map((items)=>{
+        return(
+          <View key={items.id} style={styles.cardContainer}>
+          <CreditCard/>
+          <View>
+          <Text style={styles.cardTitle}>{items.event}</Text>
+          <Text style={styles.textxs}>{items.detail}</Text>
+          </View>
+      </View>
+        )
+       })}
+       </ScrollView >
+        </ScrollView>
     </>
   );
 };
@@ -112,7 +96,7 @@ const styles = StyleSheet.create({
     width: "70%"
   },
   cardContainer:{
-    borderBottomColor:"#E7E7E7", borderWidth: 1, borderColor:"transparent",  paddingVertical:10, flexDirection:"row", alignItems:"center", gap: 15
+    borderBottomColor:"#E7E7E7", borderWidth: 1, borderColor:"transparent",  paddingVertical:10, flexDirection:"row", alignItems:"center", gap: 15,
   },
   cardTitle:{
     fontFamily: "Raleway-SemiBold",
