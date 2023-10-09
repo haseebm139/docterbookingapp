@@ -380,6 +380,8 @@ const DoctorAccount = () => {
                         query={{
                             key: "AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY",
                             language: 'en',
+                            types: 'hospital',
+                            components: 'country:pk',
                         }}
                         ListView={SectionList}
 

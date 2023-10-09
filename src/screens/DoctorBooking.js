@@ -36,11 +36,11 @@ const DoctorBooking = ({route}) => {
   const [data, setData] = useState([]);
   const [availabilityData, setAvailabilityData] = useState({});
   const [visitId, setVisitId] = useState('');
-  const [message , setMessage] = useState(null)
+  const [message, setMessage] = useState(null);
   const user = useSelector(state => state.customerAccount);
   // console.log(user.id)
   const {item} = route.params;
-  const isToday = (date) => {
+  const isToday = date => {
     const today = new Date();
     return (
       date.getDate() === today.getDate() &&
@@ -76,12 +76,20 @@ const DoctorBooking = ({route}) => {
   const morningTimings = ['09:00 AM', '11:00 AM', '11:30 AM'];
   const afternoonTimings = ['12:00 PM', '12:30 PM'];
   const eveningTimings = ['05:00 PM', '05:30 PM', '06:00 PM'];
-  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedTimefrom, setSelectedTimefrom] = useState(null);
+  const [selectedTimeTo, setSelectedTimeTo] = useState(null);
   const [lastVisitNumber, setLastVisitNumber] = useState(122);
+  console.log(selectedTimefrom , selectedTimeTo)
 
-  const handleTimePress = time => {
-    console.log(time)
-    setSelectedTime(time);
+  const handleTimePress = (time, val) => {
+    // console.log(time , val);
+    if(val === "to"){
+      setSelectedTimeTo(time)
+    }
+    if(val === "from"){
+      setSelectedTimefrom(time)
+    }
+    
   };
 
   // const handleDayPress = (index) => {
@@ -153,11 +161,11 @@ const DoctorBooking = ({route}) => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-};
+  };
 
-// const currentDate = new Date(); // Get the current date
-const formattedDate = formatDate(currentDate); // Call the function with the current date
-console.log(formattedDate);
+  // const currentDate = new Date(); // Get the current date
+  const formattedDate = formatDate(currentDate); // Call the function with the current date
+  console.log(formattedDate);
 
   const [selectedDayIndex, setSelectedDayIndex] = useState(null);
   const [selectedDate, setSelectedDate] = useState(formattedDate);
@@ -192,17 +200,18 @@ console.log(formattedDate);
 
         // Loop through each slot and categorize it based on the "from" and "to" values
         slots.forEach(slot => {
+          console.log(slot)
           const fromTime = parseInt(slot.from.split(':')[0]);
           const toTime = parseInt(slot.to.split(':')[0]);
 
           if (fromTime >= 6 && fromTime < 12) {
-            categorizedSlotsForDay.morning.push(`${slot.from} - ${slot.to}`);
-          } else if (fromTime >= 12 && fromTime < 18) {
-            categorizedSlotsForDay.afternoon.push(`${slot.from} - ${slot.to}`);
-          } else if (fromTime >= 18 && fromTime < 24) {
-            categorizedSlotsForDay.evening.push(`${slot.from} - ${slot.to}`);
+            categorizedSlotsForDay.morning.push(`${slot.from} to ${slot.to}`);
+          } else if (fromTime >= 12 && toTime < 18) {
+            categorizedSlotsForDay.afternoon.push(`${slot.from} to ${slot.to}`);
+          } else if (fromTime >= 18 && toTime < 24) {
+            categorizedSlotsForDay.evening.push(`${slot.from} to ${slot.to}`);
           } else {
-            categorizedSlotsForDay.night.push(`${slot.from} - ${slot.to}`);
+            categorizedSlotsForDay.night.push(`${slot.from} to ${slot.to}`);
           }
         });
 
@@ -212,7 +221,7 @@ console.log(formattedDate);
 
     return categorizedSlots;
   };
-  console.log(selectedDate, "selected date")
+  console.log(selectedDate, 'selected date');
   useEffect(() => {
     async function fetchAvailabilityData() {
       try {
@@ -222,14 +231,16 @@ console.log(formattedDate);
             week_date: selectedDate,
           },
         );
-        console.log(response.data)
+        // console.log(response.data);
         const categorizedSlots = processAvailabilityData(response.data.detail);
+        console.log(categorizedSlots)
         setAvailabilityData(categorizedSlots);
         // setAvailabilityData(response.data.detail);
-        setSelectedTime(null);
+        setSelectedTimefrom(null);
+        setSelectedTimeTo(null);
       } catch (err) {
-        console.log(err, "err");
-        setMessage(`No Availibility found on ${selectedDate} date`)
+        console.log(err, 'err');
+        setMessage(`No Availibility found on ${selectedDate} date`);
       }
     }
 
@@ -241,21 +252,21 @@ console.log(formattedDate);
   console.log(visitId);
 
   const handleDoneButtonPress = async () => {
-    if (selectedDate && selectedTime) {
+    if (selectedDate && selectedTimefrom && selectedTimeTo) {
       try {
         // Prepare the visit data...
         const selectedDay = daysInNumber[selectedDayIndex]; // Get the full day name based on the selectedDayIndex
 
-          navigation.navigate('DoctorDetail', {
-            item: item,
-            selectedDate: selectedDate, // Pass the selectedDate
-            selectedTime: selectedTime, // Pass the selectedTime
-            docData: data,
-            visitId: visitId,
-            selectedDay: selectedDay
-          });
+        navigation.navigate('DoctorDetail', {
+          item: item,
+          selectedDate: selectedDate, // Pass the selectedDate
+          selectedTimefrom: selectedTimefrom, // Pass the selectedTime
+          selectedTimeTo: selectedTimeTo, // Pass the selectedTime
+          docData: data,
+          visitId: visitId,
+          selectedDay: selectedDay,
+        });
 
-          
         // }
       } catch (err) {
         // Handle any errors that occur during the API call
@@ -286,7 +297,10 @@ console.log(formattedDate);
             alignItems: 'flex-start',
             marginVertical: responsiveScreenHeight(1.5),
           }}>
-          <Avatar.Image size={64} source={{uri:`https://customdemowebsites.com/dbapi/${data.img}`}} />
+          <Avatar.Image
+            size={64}
+            source={{uri: `https://customdemowebsites.com/dbapi/${data.img}`}}
+          />
           <View style={{gap: 5}}>
             <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
               <Text style={{color: '#172331', fontFamily: 'Raleway-Bold'}}>
@@ -344,36 +358,39 @@ console.log(formattedDate);
         <View>
           {/* <Text style={styles.day}>{daysInNumber[dayInNumber]}</Text>
       <Text style={styles.date}>{day}</Text> */}
-          <View style={{ flexDirection: 'row', gap: 5 }}>
-  {daysInNumber.map((day, index) => {
-    const futureDate = new Date(startOfWeek);
-    futureDate.setDate(startOfWeek.getDate() + index);
+          <View style={{flexDirection: 'row', gap: 5}}>
+            {daysInNumber.map((day, index) => {
+              const futureDate = new Date(startOfWeek);
+              futureDate.setDate(startOfWeek.getDate() + index);
 
-    const dayNumber = futureDate.getDate();
+              const dayNumber = futureDate.getDate();
 
-    const isSelected = selectedDayIndex === index || isToday(futureDate); // Check if it's today's date
-    const style = isSelected
-      ? { ...calendarContainerSelectedStyle, backgroundColor: '#4464D9' } // Apply the background color for today
-      : calendarContainerStyle;
-    const dayTextStyleToApply = isSelected
-      ? daySelectedTextStyle
-      : dayTextStyle;
-    const dateTextStyleToApply = isSelected
-      ? dateSelectedTextStyle
-      : dateTextStyle;
+              const isSelected =
+                selectedDayIndex === index || isToday(futureDate); // Check if it's today's date
+              const style = isSelected
+                ? {
+                    ...calendarContainerSelectedStyle,
+                    backgroundColor: '#4464D9',
+                  } // Apply the background color for today
+                : calendarContainerStyle;
+              const dayTextStyleToApply = isSelected
+                ? daySelectedTextStyle
+                : dayTextStyle;
+              const dateTextStyleToApply = isSelected
+                ? dateSelectedTextStyle
+                : dateTextStyle;
 
-    return (
-      <TouchableOpacity
-        key={index}
-        style={[styles.calendarContainer, style]}
-        onPress={() => handleDayPress(index)}
-      >
-        <Text style={dayTextStyleToApply}>{day.charAt(0)}</Text>
-        <Text style={dateTextStyleToApply}>{dayNumber}</Text>
-      </TouchableOpacity>
-    );
-  })}
-</View>
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[styles.calendarContainer, style]}
+                  onPress={() => handleDayPress(index)}>
+                  <Text style={dayTextStyleToApply}>{day.charAt(0)}</Text>
+                  <Text style={dateTextStyleToApply}>{dayNumber}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
 
           {/* {Object.keys(availabilityData).map((day, index) => (
             <View key={index}>
@@ -600,46 +617,52 @@ console.log(formattedDate);
                 )}
             </View>
           ))} */}
-          
+
           {Object.keys(availabilityData).length > 0 ? (
-    Object.keys(availabilityData).map((day, index) => (
-      <View key={index}>
-        {/* Render the day */}
-        {/* ...
+            Object.keys(availabilityData).map((day, index) => (
+              <View key={index}>
+                {/* Render the day */}
+                {/* ...
 
         {/* Conditionally render slots */}
-        {['morning', 'afternoon', 'evening', 'night'].map((slotType) => {
-          const timeSlots = availabilityData[day][slotType];
-          if (timeSlots && timeSlots.length > 0) {
-            return (
-              <>
-                <View style={styles.row}>
-                  {slotType === 'morning' && <MorningICon />}
-                  {slotType === 'afternoon' && <NoonICon />}
-                  {slotType === 'evening' && <EveningICon />}
-                  <Text style={styles.sectionTitle}>{slotType}</Text>
-                </View>
-                <View style={styles.timeContainer}>
-                  {timeSlots.map((timeSlot, slotIndex) => (
-                    <SlotComponent
-  key={slotIndex}
-  timeSlot={timeSlot}
-  selectedSlot={selectedTime} // Pass selectedTime as selectedSlot
-  handleTimePress={handleTimePress}
+                {['morning', 'afternoon', 'evening', 'night'].map(slotType => {
+                  const timeSlots = availabilityData[day][slotType];
+                  if (timeSlots && timeSlots.length > 0) {
+                    return (
+                      <>
+                        <View style={styles.row}>
+                          {slotType === 'morning' && <MorningICon />}
+                          {slotType === 'afternoon' && <NoonICon />}
+                          {slotType === 'evening' && <EveningICon />}
+                          <Text style={styles.sectionTitle}>{slotType}</Text>
+                        </View>
+                        <View style={styles.timeContainer}>
+                          {timeSlots.map((timeSlot, slotIndex) => (
+                            // <SlotComponent
+                            //   key={slotIndex}
+                            //   timeSlot={timeSlot}
+                            //   selectedSlot={selectedTimefrom || selectedTimeTo} // Pass selectedTime as selectedSlot
+                            //   handleTimePress={handleTimePress}
+                            // />
+                            <SlotComponent
+                            key={slotIndex}
+                            timeSlot={timeSlot}
+  selectedTimefrom={selectedTimefrom}
+  selectedTimeTo={selectedTimeTo}
+  handleTimePress={(time, val) => handleTimePress(time, val)}
 />
-                  ))}
-                </View>
-              </>
-            );
-          }
-          return null; // Skip rendering if no time slots for this slotType
-        })}
-      </View>
-    ))
-  ) : (
-    <Text style={styles.dataNotFound}>No Availability found</Text>
-  )}
-  
+                          ))}
+                        </View>
+                      </>
+                    );
+                  }
+                  return null; // Skip rendering if no time slots for this slotType
+                })}
+              </View>
+            ))
+          ) : (
+            <Text style={styles.dataNotFound}>No Availability found</Text>
+          )}
 
           <View
             style={{
@@ -723,53 +746,39 @@ console.log(formattedDate);
   );
 };
 
-
-
-const SlotComponent = ({ timeSlot, selectedSlot, handleTimePress }) => {
-  const [startTime, endTime] = timeSlot.split(' - ');
-  const isActive = selectedSlot === startTime || selectedSlot === endTime;
+const SlotComponent = ({ timeSlot, selectedTimefrom, selectedTimeTo,  handleTimePress }) => {
+  const [startTime, endTime] = timeSlot.split(' to ');
+  const isActive = selectedTimefrom === startTime ;
+  const isActives =  selectedTimeTo === endTime ;
 
   return (
     <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <TouchableOpacity
-        style={[
-          styles.timeButton,
-          isActive && styles.timeButtonSelected,
-        ]}
-        onPress={() => handleTimePress(startTime)}
-      >
-        <Text
-          style={[
-            styles.timeText,
-            isActive && styles.timeTextSelected,
-          ]}
-        >
-          {startTime}
-        </Text>
-      </TouchableOpacity>
+    style={{
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    }}>
+    <TouchableOpacity
+      style={[
+        styles.timeButton,
+        isActive && styles.timeButtonSelected,
+      ]}
+      onPress={() => handleTimePress(startTime, "from")}>
+      <Text style={[styles.timeText, isActive && styles.timeTextSelected]}>
+        {startTime}
+      </Text>
+    </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[
-          styles.timeButton,
-          isActive && styles.timeButtonSelected,
-        ]}
-        onPress={() => handleTimePress(endTime)}
-      >
-        <Text
-          style={[
-            styles.timeText,
-            isActive && styles.timeTextSelected,
-          ]}
-        >
-          {endTime}
-        </Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      style={[
+        styles.timeButton,
+        isActives && styles.timeButtonSelected,
+      ]}
+      onPress={() => handleTimePress(endTime, "to")}>
+      <Text style={[styles.timeText, isActives && styles.timeTextSelected]}>
+        {endTime}
+      </Text>
+    </TouchableOpacity>
+  </View>
   );
 };
 
@@ -793,7 +802,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: responsiveScreenHeight(0.8),
     flexWrap: 'wrap',
-    gap:10
+    gap: 10,
   },
   timeButton: {
     alignItems: 'center',
@@ -818,10 +827,10 @@ const styles = StyleSheet.create({
   timeTextSelected: {
     color: 'white',
   },
-  dataNotFound:{
-   margin: 10,
-   textAlign: 'center',
-   fontFamily: 'Raleway-SemiBold',
+  dataNotFound: {
+    margin: 10,
+    textAlign: 'center',
+    fontFamily: 'Raleway-SemiBold',
   },
   row: {
     flexDirection: 'row',

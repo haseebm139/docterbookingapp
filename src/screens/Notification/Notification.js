@@ -49,6 +49,7 @@ const Notification = () => {
        </View>
        <ScrollView style={{paddingBottom: responsiveScreenHeight(60), flex: 1 , height: responsiveScreenHeight(10)}}>
        {notify.map((items)=>{
+        console.log(items)
         return(
           <View key={items.id} style={styles.cardContainer}>
           <CreditCard/>

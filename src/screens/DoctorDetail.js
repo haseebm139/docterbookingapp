@@ -30,30 +30,31 @@ import {parse, format} from 'date-fns';
 import Geolocation from '@react-native-community/geolocation';
 import {useSelector} from 'react-redux';
 import {PermissionsAndroid} from 'react-native';
+import MapView, { Marker,  PROVIDER_GOOGLE  } from 'react-native-maps';
+import { Linking } from 'react-native';
 
 
 const DoctorDetail = ({route}) => {
-  const {selectedDate, selectedTime, item, visitId , selectedDay} = route.params;
-  console.log(selectedDate, selectedTime, visitId, selectedDay, item);
+  const {selectedDate, selectedTimefrom, selectedTimeTo, item, visitId , selectedDay} = route.params;
+  console.log(selectedDate, selectedTimefrom, selectedTimeTo, visitId, selectedDay, item);
 
   const [data, setData] = useState([]);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState({ latitude: 37.78825, longitude: -122.4324 });
+  const [markerCoordinate, setMarkerCoordinate] = useState(null);
   const [address, setAddress] = useState(null);
   const [ loading , setLoading] = useState(false)
   const [loadingDotsCount, setLoadingDotsCount] = useState(1);
   const parsedDate = parse(selectedDate, 'yyyy-MM-dd', new Date());
+  const [showMap, setShowMap] = useState(false);
   const user = useSelector(state => state.customerAccount);
-  console.log(user)
   const phone = useSelector(State => State.phone);
-  console.log(user, phone);
 
-  console.log(address);
+
   // // Format the date to "Fri, 10 Mar" format
   const formattedDate = format(parsedDate, 'E, d MMM');
   // console.log(formattedDate)
 
   const navigation = useNavigation();
-  console.log(data);
 
   useEffect(() => {
     // Check and request location permission for Android
@@ -74,29 +75,15 @@ const DoctorDetail = ({route}) => {
       // getCurrentLocation();
      getCurrentLocation()
     }
-  }, []);
+  }, [location]);
 
-  // const getCurrentLocation = () => {
-  //   Geolocation.getCurrentPosition(
-  //     (position) => {
-  //       const { latitude, longitude } = position.coords;
-  //       setLocation({ latitude, longitude });
-  //       getReverseGeocode(latitude, longitude);
-  //     },
-  //     (error) => {
-  //       console.log('Error getting location: ', error);
-  //       // Handle different error cases here (e.g., timeout, permission denied)
-  //     },
-  //     { enableHighAccuracy: true, timeout: 30000, maximumAge: 1000 }
-  //   );
-  // };
   const getCurrentLocation = () => {
   Geolocation.getCurrentPosition(
     pos => {
       // Do somehting if location activated
       console.log(pos)
       const { latitude, longitude } = pos.coords;
-      setLocation({ latitude, longitude });
+      // setLocation({ latitude, longitude });
       getReverseGeocode(latitude, longitude);
     },
     error => {
@@ -110,7 +97,7 @@ const DoctorDetail = ({route}) => {
 const getReverseGeocode = async (latitude, longitude) => {
   try {
     const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=AIzaSyB4kdLXqVay4JN-vuRNkLU_8Cu5D0saFMY`
     );
 
     if (response && response.data) {
@@ -127,6 +114,7 @@ const getReverseGeocode = async (latitude, longitude) => {
     setAddress('Error fetching address');
   }
 };
+
 
   const formattedAddress = address
     ? `${address.houseNumber ? address.houseNumber : ''}, ${
@@ -149,7 +137,8 @@ const getReverseGeocode = async (latitude, longitude) => {
       navigation.navigate('AmountPayment', {
         item: item,
         selectedDate: selectedDate, // Pass the selectedDate
-        selectedTime: selectedTime,
+        selectedTimefrom: selectedTimefrom,
+        selectedTimeTo: selectedTimeTo,
         visitId: visitId, // Pass the selectedTime
         selectedDay: selectedDay
       });
@@ -160,6 +149,25 @@ const getReverseGeocode = async (latitude, longitude) => {
     
   }
   };
+
+  console.log(location)
+  const openGoogleMaps = () => {
+    // Replace with your desired latitude and longitude
+    // const latitude = 37.78825;
+    // const longitude = -122.4324;
+    
+    // const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    
+    // Linking.openURL(url)
+    //   .catch((error) => {
+    //     console.error('Error opening Google Maps:', error);
+    //   });
+    const latitude = location.latitude;
+    const longitude = location.longitude
+    navigation.navigate('MapView', {  setLocation, location});
+  };
+
+  
 
   useEffect(() => {
     // Simulate loading for a few seconds
@@ -271,7 +279,7 @@ const getReverseGeocode = async (latitude, longitude) => {
                     fontFamily: 'Raleway-SemiBold',
                     fontSize: 14,
                   }}>
-                  {formattedDate} {selectedTime}
+                  {formattedDate} {selectedTimefrom} 
                 </Text>
               </View>
             </View>
@@ -315,7 +323,7 @@ const getReverseGeocode = async (latitude, longitude) => {
               <Divider />
             </View>
             <Divider />
-            <View
+            {/* <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'center',
@@ -332,7 +340,31 @@ const getReverseGeocode = async (latitude, longitude) => {
                 }}>
                 Choose current location
               </Text>
-            </View>
+            </View> */}
+            <View >
+
+    <TouchableOpacity onPress={openGoogleMaps}
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        gap: 5,
+      }}
+    >
+        <LocationIcon />
+      <Text
+        style={{
+          color: '#4464D9',
+          fontFamily: 'Raleway-SemiBold',
+          fontSize: 12,
+        }}
+      >
+        Choose current location
+      </Text>
+    </TouchableOpacity>
+  </View>
+ 
           </View>
           <Divider />
           <View
@@ -484,6 +516,7 @@ const getReverseGeocode = async (latitude, longitude) => {
 export default DoctorDetail;
 
 const styles = StyleSheet.create({
+ 
   container: {
     flex: 1,
     backgroundColor: '#fff',

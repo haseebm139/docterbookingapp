@@ -33,7 +33,6 @@ const Intro = () => {
         const token = await messaging().getToken();
         if (token) {
           console.log('FCM Token:', token);
-          const res = await fcmU
           dispatch(setFCMToken(token));
           // You can send this token to your server for further use.
         } else {

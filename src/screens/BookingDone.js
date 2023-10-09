@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 
 const BookingDone = ({route}) => {
   const [visitId, setVisitId] = useState('');
-  const { item, selectedDate, selectedTime, selectedDay} = route.params;
+  const { item, selectedDate, selectedTimefrom, selectedTimeTo, selectedDay} = route.params;
   console.log(item.fcm_token)
   const user = useSelector((state)=> state.customerAccount)
   const [visitid , setVisitid] = useState(null)
@@ -35,7 +35,7 @@ const BookingDone = ({route}) => {
 
 
   const handleDoneButtonPress = async () => {
-    if (selectedDate && selectedTime) {
+    if (selectedDate && selectedTimefrom && selectedTimeTo) {
       try {
         // Prepare the visit data...
         // Make the API call to add the visit...
@@ -49,8 +49,8 @@ const BookingDone = ({route}) => {
             date_time: selectedDate,
             detail: {
               day: selectedDay, // Set the full day name (e.g., "Tuesday")
-              from: selectedTime, // The selected start time (e.g., '12:00')
-              to: selectedTime, // The selected end time (e.g., '14:00') - You may want to set this separately if needed
+              from: selectedTimefrom, // The selected start time (e.g., '12:00')
+              to: selectedTimeTo, // The selected end time (e.g., '14:00') - You may want to set this separately if needed
             },
           },
         );
@@ -59,7 +59,7 @@ const BookingDone = ({route}) => {
 
         // Check if the visit was added successfully based on the HTTP status code
         if (response.status === 201) {
-          const notificationMessage = `${user.id} ${user.firstName} requested for the Booking on ${selectedDate} at ${selectedTime} visit_No: ${response.data.visit_id}`;
+          const notificationMessage = `${user.id} ${user.firstName} requested for the Booking on ${selectedDate} at ${selectedTimefrom} visit_No: ${response.data.visit_id}`;
           const notificationResponse = await axios.post(
             'https://customdemowebsites.com/dbapi/notifications/add',
             {
@@ -143,7 +143,7 @@ const BookingDone = ({route}) => {
                 fontFamily: 'Raleway-SemiBold',
                 fontSize: 14,
               }}>
-             {formattedDate} {selectedTime}
+             {formattedDate} {selectedTimefrom}
             </Text>
           </View>
         </View>

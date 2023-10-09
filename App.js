@@ -10,6 +10,9 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {enableLatestRenderer} from 'react-native-maps';
+
+enableLatestRenderer();
 
 import {NavigationContainer} from '@react-navigation/native';
 import Home from './src/screens/Home';
@@ -48,6 +51,7 @@ import { ToastProvider } from 'react-native-paper-toast';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import DoctorNotifications from './src/screens/Notification/DoctorNotification';
 import messaging from '@react-native-firebase/messaging';
+import MapViewScreen from './src/screens/MapViewScreen';
 
 
 function App() {
@@ -123,6 +127,7 @@ function App() {
           <Stack.Screen name="DoctorOtp" component={DoctorOtpVerification} />
           <Stack.Screen name="Details" component={Detail} />
           <Stack.Screen name="DoctorNotification" component={DoctorNotifications} />
+          <Stack.Screen name="MapView" component={MapViewScreen} />
           <Stack.Screen
             name="Authentication"
             component={MobileAuthentication}

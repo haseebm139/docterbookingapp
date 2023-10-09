@@ -15,8 +15,8 @@ import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 
 const AmountPay = ({route}) => {
-  const { item, selectedDate, selectedTime, visitId, selectedDay} = route.params;
-  console.log(selectedTime,selectedDate, visitId, selectedDay)
+  const { item, selectedDate, selectedTimefrom, selectedTimeTo, visitId, selectedDay} = route.params;
+  console.log(selectedTimefrom, selectedTimeTo,selectedDate, visitId, selectedDay)
   
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const navigation = useNavigation();
@@ -38,7 +38,8 @@ const AmountPay = ({route}) => {
     navigation.navigate("BookingDone", {
       item: item,
       selectedDate: selectedDate, // Pass the selectedDate
-      selectedTime: selectedTime, // Pass the selectedTime
+      selectedTimefrom: selectedTimefrom,
+      selectedTimeTo: selectedTimeTo, // Pass the selectedTime
       visitId:visitId,
       selectedDay: selectedDay
       

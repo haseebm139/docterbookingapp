@@ -84,10 +84,7 @@ const handleCancel = async()=>{
           justifyContent:"space-between"
         }}>
             <View style={{flexDirection:"row", gap: 20}}>
-        <Avatar.Image
-          size={responsiveScreenWidth(10)}
-          source={require('../../../assets/assets/doctorimg.png')}
-        />
+            <Avatar.Image size={42} source={ {uri:`https://customdemowebsites.com/dbapi/${item.img}`} }/>
         <View style={{gap: 2}}>
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 2}}>
             <Text style={{color: '#172331', fontFamily: 'Raleway-Bold'}}>
@@ -165,7 +162,7 @@ const handleCancel = async()=>{
                 color: '#172331',
                 fontFamily: 'Raleway-Medium',
                 fontSize: 14,
-                width: '70%',
+                width: responsiveScreenWidth(70),
               }}>
              {item.address}
             </Text>
